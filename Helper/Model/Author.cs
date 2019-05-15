@@ -11,9 +11,17 @@ namespace Helper.Model
         public string FirstName { get; set; }
         public string MidleName { get; set; }
         public string SecondName { get; set; }
+
         public string GetAuthor
         {
             get => SecondName + ',' + FirstName + " " + MidleName;
         }
+        public Author(string fn, string mn, string sn)
+        {
+            FirstName = fn;
+            MidleName = mn;
+            SecondName = sn;
+        }
+        public Author() { }
     }
 }

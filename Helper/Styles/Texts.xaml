@@ -50,7 +50,6 @@
                             </MultiTrigger.Conditions>
                             <Setter TargetName="hint" Property="Visibility" Value="Visible" />
                         </MultiTrigger>
-
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

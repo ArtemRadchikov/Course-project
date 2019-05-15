@@ -1,41 +1,39 @@
 ﻿using DevExpress.Mvvm;
 using Helper.Model;
+using ReactiveValidation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace Helper.ViewModel
 {
-    class BookEditorViewModel : BaseVM
-    {
-        Book eBook;
+    class BookAddViewModel : ValidatableObject
+    { 
+        Book selectedBook;
+
+        private IObjectValidator GetValidator()
 
 
-        public Book EBook
+
+        public string newAuthor;
+        public string NewAuthor
         {
-            get => eBook;
+            get=> newAuthor;
             set
             {
-                eBook = value;
-                OnPropertyChanged("EBook");
+                newAuthor = value;
+                OnPropertyChanged("NewAuthor");
             }
         }
 
-        public ObservableCollection<KeyWordItem> KeyWords
-        {
-            get => EBook.KeyWords;
-            set
-            {
-                EBook.KeyWords = value;
-                OnPropertyChanged("KeyWords");
-            }
-        }
-
-        string newKeyWord;
+        public string newKeyWord;
         public string NewKeyWord
         {
             get => newKeyWord;
@@ -46,49 +44,127 @@ namespace Helper.ViewModel
             }
         }
 
-        public BookEditorViewModel()
+        public Book SelectedBook
         {
-            try
+            get => selectedBook;
+            set
             {
-                EBook = new Book();
-                MessageBox.Show((EBook.KeyWords == null).ToString());
-                EBook.KeyWords.Add(new KeyWordItem("www"));
-                MessageBox.Show(EBook.KeyWords.Count().ToString());
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
+                selectedBook = value;
+                OnPropertyChanged("SelectedBook");
             }
         }
 
-        public DelegateCommand AddKeyWord
+        
+        public string PublishDate
         {
             get
             {
-                return new DelegateCommand(() =>
+                if (SelectedBook.PublishDate == 0)
+                    return "";
+                return SelectedBook.PublishDate.ToString();
+            }
+            set
+            {
+                if (int.TryParse(value, out int result))
                 {
-                    EBook.KeyWords.Add(new KeyWordItem(newKeyWord));
-                    MessageBox.Show(EBook.KeyWords[EBook.KeyWords.Count() - 1].Value);
-
-                    newKeyWord = "";
-                });
+                    SelectedBook.PublishDate = result;
+                    OnPropertyChanged("PublishDate");
+                }
+                else
+                    throw new NotImplementedException();
             }
         }
 
-        public DelegateCommand<KeyWordItem> DeleteKeyWord
+
+        public string BookName
+        {
+            get => SelectedBook.Name;
+            set
+            {
+                SelectedBook.Name=value;
+                OnPropertyChanged("BookName");
+            }
+        }
+
+        public ObservableCollection<KeyWordItem> KeyWords
+        {
+            get => SelectedBook.KeyWords;
+            set
+            {
+                    SelectedBook.KeyWords = value;
+                    OnPropertyChanged("KeyWords");
+            }
+        }
+
+        public ObservableCollection<Author> Authors
+        {
+            get => SelectedBook.Authors;
+            set
+            {
+                SelectedBook.Authors = value;
+                OnPropertyChanged("Authors");
+            }
+        }
+
+        public ICommand KeyWordDelete
         {
             get
             {
-                return new DelegateCommand<KeyWordItem>((keyword) =>
+                return new DelegateCommand<KeyWordItem>((item) =>
                 {
-                    if (keyword != null)
+                    if (item != null)
                     {
-                        EBook.KeyWords.Remove(keyword);
+                       KeyWords.Remove(item);
                     }
                 });
             }
         }
 
+        public ICommand AuthorDelete
+        {
+            get
+            {
+                return new DelegateCommand<Author>((item) =>
+                {
+                    if (item != null)
+                    {
+                        Authors.Remove(item);
+                    }
+                });
+            }
+        }
+
+        public ICommand AddAuthor
+        {
+            get
+            {
+                return new DelegateCommand<string>((author) =>
+                {
+                    string[] names=author.Split(' ');
+                    SelectedBook.Authors.Add(new Author(names[0], names[1], names[2]));
+                    NewAuthor = "";
+                }, author=>((author.Split(' ')).Length==3) && (author.Split(' '))[2]!="");
+            }
+        }
+
+        public ICommand AddKeyWord
+        {
+            get
+            {
+                return new DelegateCommand<string>((word) =>
+                {
+                    SelectedBook.KeyWords.Add(new KeyWordItem(word));
+                    NewKeyWord = "";
+                },word=>word!="");
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
     }
 }

@@ -20,8 +20,7 @@ namespace Helper.ViewModel
         public ObservableCollection<Book> Books { get; set; }
         public ICollectionView BooksView { get; set; }
         Book selectedBook;
-        
-
+                
         public Book SelectedBook {
             get => selectedBook; 
             set
@@ -191,13 +190,14 @@ namespace Helper.ViewModel
                 {
                     Book book = new Book();
                     var w = new BookEditorWindow();
-                    var bm = new BookEditorViewModel
+                    var bm = new BookAddViewModel
                     {
-                        EBook = book,
+                        SelectedBook = book,
                     };
                     w.DataContext = bm;
                     w.ShowDialog();
 
+                    Books.Add(book);
                 });
             }
         }
@@ -215,7 +215,6 @@ namespace Helper.ViewModel
                     {
                         Process.Start(SelectedBook.Url);
                     }
-
 
                 });
             }

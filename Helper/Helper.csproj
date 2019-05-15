@@ -47,6 +47,9 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.5.1.1345, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.5.1\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="ReactiveValidation, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ReactiveValidation.1.0.5\lib\net45\ReactiveValidation.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -72,6 +75,7 @@
     </ApplicationDefinition>
     <Compile Include="Model\Author.cs" />
     <Compile Include="Model\Book.cs" />
+    <Compile Include="Model\IDataErrorInfo.cs" />
     <Compile Include="Model\KeyWordItem.cs" />
     <Compile Include="ViewModel\AddDecisionViewModel.cs" />
     <Compile Include="ViewModel\BookEditorViewModel.cs" />

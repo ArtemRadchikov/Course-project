@@ -4,24 +4,37 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Helper.View"
+        xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         MinWidth="650"
         MinHeight="500" ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Title="BookEditorWindow">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTip"
+                    Value="{Binding RelativeSource={RelativeSource Self},
+                        Path=(Validation.Errors)[0].ErrorContent}" />
+                    <Setter Property="Foreground" Value="Red" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Grid
-                Background="{StaticResource LightBrush}"
-                DataContext="{Binding EBook}">
-
+                Grid.Row="2"
+                Background="{StaticResource LightBrush}">
 
         <ScrollViewer>
             <StackPanel Name="root" Margin="10">
                 <TextBox
                             Margin="10"
                             Tag="Название.."
+                            MaxLength="200"
                             FontSize="{StaticResource H1}"
                             Style="{StaticResource BaseTextBox}"
-                            Text="{Binding BindingGroupName,UpdateSourceTrigger=PropertyChanged}"
+                            Text="{Binding BookName,UpdateSourceTrigger=PropertyChanged}"
                             TextAlignment="Center"
                             TextWrapping="Wrap" />
 
@@ -48,38 +61,63 @@
                                             Style="{StaticResource BaseText}"
                                             Text="Авторы: "/>
                                 <StackPanel Orientation="Vertical">
-                                    <ItemsControl ItemsSource="{Binding Authors}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <WrapPanel />
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox x:Name="Author" Margin="10,10,5,10"
+                                            Tag="ФИО автора.."
+                                            MaxLength="60"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BaseTextBox}"
+                                            Text="{Binding NewAuthor,UpdateSourceTrigger=PropertyChanged}"
+                                            TextWrapping="Wrap" Width="190" />
+                                            <Button
+                                                Margin="10"
+                                                Command="{Binding AddAuthor}" CommandParameter="{Binding ElementName=Author, Path=Text}"
+                                                Cursor="Hand" 
+                                                Style="{StaticResource BaseButton}" HorizontalAlignment="Right">
+                                                <ContentControl  Height="20" Width="20" >
+                                                    <Viewbox Margin="-15" Stretch="Uniform">
+                                                        <Grid>
+                                                            <MD:PackIcon Kind="Plus" Foreground="White"/>
+                                                        </Grid>
+                                                    </Viewbox>
+                                                </ContentControl>
+                                            </Button>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Vertical">
+                                        <ItemsControl ItemsSource="{Binding Authors,UpdateSourceTrigger=PropertyChanged}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border
                                                         Margin="3"
                                                         Background="{StaticResource MediumBaseBrush}"
                                                         CornerRadius="3"
                                                         Cursor="Hand">
-                                                    <TextBlock
+                                                        <TextBlock
                                                             Margin="5"
                                                             VerticalAlignment="Center"
                                                             Foreground="White"
                                                             Style="{StaticResource BaseText}"
-                                                            Text="{Binding GetAuthor}"
+                                                            Text="{Binding Value}"
                                                             TextDecorations="Underline"
                                                             TextWrapping="Wrap" />
-
-                                                    <Border.InputBindings>
-                                                        <MouseBinding
-                                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.Authors}"
+                                                        <Border.InputBindings>
+                                                            <MouseBinding
+                                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.AuthorDelete}"
                                                                 CommandParameter="{Binding}"
-                                                                Gesture="LeftClick" />
-                                                    </Border.InputBindings>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
+                                                                Gesture="RightClick" />
+                                                        </Border.InputBindings>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+
                                 </StackPanel>
                             </UniformGrid>
                             <UniformGrid Background="{StaticResource MediumBrush}" Columns="2">
@@ -87,7 +125,31 @@
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BaseText}"
                                             Text="Ключевые слова: "/>
+
                                 <StackPanel Orientation="Vertical">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox x:Name="KeyWord" Margin="10,10,5,10"
+                                            Tag="ключевое слово.."
+                                            MaxLength="60"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BaseTextBox}"
+                                            Text="{Binding NewKeyWord,UpdateSourceTrigger=PropertyChanged}"
+                                            TextWrapping="Wrap" Width="190" />
+                                            <Button
+                                                Margin="10"
+                                                Command="{Binding AddKeyWord}" CommandParameter="{Binding ElementName=KeyWord, Path=Text}"
+                                                Cursor="Hand" 
+                                                Style="{StaticResource BaseButton}" HorizontalAlignment="Right">
+                                                        <ContentControl Height="20" Width="20">
+                                                            <Viewbox Margin="-15" Stretch="Uniform">
+                                                                <Grid>
+                                                                    <MD:PackIcon Kind="Plus" Foreground="White"/>
+                                                                </Grid>
+                                                            </Viewbox>
+                                                        </ContentControl>
+                                            </Button>
+                                    </StackPanel>
+                                    
                                     <StackPanel Orientation="Vertical">
                                         <ItemsControl ItemsSource="{Binding KeyWords,UpdateSourceTrigger=PropertyChanged}">
                                             <ItemsControl.ItemsPanel>
@@ -107,36 +169,22 @@
                                                             VerticalAlignment="Center"
                                                             Foreground="White"
                                                             Style="{StaticResource BaseText}"
-                                                            Text="{Binding Value,Mode=TwoWay}"
+                                                            Text="{Binding Value}"
                                                             TextDecorations="Underline"
                                                             TextWrapping="Wrap" />
-
-                                                        <!--<Border.InputBindings>
+                                                        <Border.InputBindings>
                                                             <MouseBinding
-                                                                Command="{Binding DeleteKeyWord}" Gesture="LeftClick" />
-                                                        </Border.InputBindings>-->
+                                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.KeyWordDelete}"
+                                                                CommandParameter="{Binding}"
+                                                                Gesture="RightClick" />
+                                                        </Border.InputBindings>
                                                     </Border>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
                                     </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBox  Margin="10,10,5,10"
-                                            VerticalAlignment="Center"
-                                            Style="{StaticResource BaseTextBox}"
-                                            Text="{Binding NewKeyWord,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
-                                            TextWrapping="Wrap" Width="190" />
-                                        <Button
-                                        Margin="10"
-                                        Command="{Binding AddKeyWord}"
-                                        Cursor="Hand" 
-                                        Style="{StaticResource BaseButton}" HorizontalAlignment="Right">
-                                            <ContentControl Height="20" Width="20" Content="{StaticResource PlusElemIcon}" />
-                                        </Button>
-                                    </StackPanel>
-                                </StackPanel>
 
-                               
+                                </StackPanel>
                             </UniformGrid>
 
                             <UniformGrid Background="{StaticResource DarkBrush}" Columns="2">
@@ -145,11 +193,14 @@
                                             Style="{StaticResource BaseText}"
                                             Text="Дата публикации: "/>
                                 <TextBox
+                                            Tag="гггг"
                                             Margin="10"
+                                            MaxLength="4"
                                             VerticalAlignment="Center"
+                                            Text="{Binding PublishDate,UpdateSourceTrigger=PropertyChanged}"
                                             Style="{StaticResource BaseTextBox}"
-                                            Text="{Binding PublishDate}"
-                                            TextWrapping="Wrap" MaxLength="4" >
+                                            TextWrapping="Wrap">
+                                    
                                 </TextBox>
                             </UniformGrid>
 
@@ -159,8 +210,11 @@
                                             Style="{StaticResource BaseText}"
                                             Text="Издательство: "/>
                                 <TextBox
+                                            Tag="название издательтва.."
                                             Margin="10"
+                                            MaxLength="200"
                                             VerticalAlignment="Center"
+                                            Cursor="Hand"
                                             Style="{StaticResource BaseTextBox}"
                                             Text="{Binding Publisher}"
                                             TextWrapping="Wrap">
@@ -171,16 +225,20 @@
                                 <TextBlock  Margin="10"
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BaseText}"
-                                            Text="Библиографическое описание:"/>
+                                            Text="Библиографическое описание:  "/>
                                 <ScrollViewer
                                             MaxHeight="100"
                                             HorizontalScrollBarVisibility="Disabled"
                                             VerticalScrollBarVisibility="Auto">
+                                    
                                     <TextBox
+                                                
+                                                Tag="максмум 255 символов"
                                                 Margin="10"
                                                 VerticalAlignment="Center"
                                                 Style="{StaticResource BaseTextBox}"
-                                                Text="{Binding BibliographicDescription,UpdateSourceTrigger=PropertyChanged}"
+                                                MaxLength="255"
+                                                Text="{Binding BibliographicDescription}"
                                                 TextWrapping="Wrap" />
                                 </ScrollViewer>
                             </UniformGrid>
@@ -195,6 +253,8 @@
                                             HorizontalScrollBarVisibility="Disabled"
                                             VerticalScrollBarVisibility="Auto">
                                     <TextBox
+                                                Tag="максмум 255 символов"
+                                                MaxLength="255"
                                                 Margin="10"
                                                 VerticalAlignment="Center"
                                                 Style="{StaticResource BaseTextBox}"
@@ -211,6 +271,7 @@
                                             Text="Ссылка: " />
 
                                 <TextBox
+                                            Tag="url на pdf файл"
                                             Margin="10"
                                             VerticalAlignment="Center"
                                             Foreground="{StaticResource MediumBaseBrush}"
@@ -218,6 +279,7 @@
                                             Text="{Binding Url}"
                                             TextDecorations="Underline"
                                             TextWrapping="Wrap">
+                                    
                                 </TextBox>
 
                             </UniformGrid>
@@ -229,4 +291,7 @@
 
         </ScrollViewer>
     </Grid>
+
+    
+
 </Window>
