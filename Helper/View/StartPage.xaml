@@ -1,0 +1,22 @@
+﻿<Page x:Class="Helper.View.StartPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Helper"
+      
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="StartPage">
+
+    <Grid>
+        
+        <Frame Grid.Row="1" Content="{Binding CurrentPage}" NavigationUIVisibility="Hidden" Opacity="{Binding FrameOpacity}"  />
+        
+        <StackPanel Orientation="Horizontal" Height="60" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,75,0">
+            <Button Content="{StaticResource SearchIcon}" Command="{Binding GoToLibrary}" Style="{StaticResource BaseButton}" Margin="0,0,15,0"/>
+            <Button Content="Main" Command="{Binding GoToMain}" Height="60" Style="{StaticResource BaseButton}" Width="60"/>
+            <Button Content="{StaticResource DeceseionIcon}" Command="{Binding GoToDecisions}" Height="60" Style="{StaticResource BaseButton}" Margin="15,0,0,0"/>
+        </StackPanel>
+    </Grid>
+</Page>

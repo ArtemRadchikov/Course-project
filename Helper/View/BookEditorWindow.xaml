@@ -1,0 +1,232 @@
+﻿<Window x:Class="Helper.View.BookEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Helper.View"
+        mc:Ignorable="d"
+        MinWidth="650"
+        MinHeight="500" ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Title="BookEditorWindow">
+    <Grid
+                Background="{StaticResource LightBrush}"
+                DataContext="{Binding EBook}">
+
+
+        <ScrollViewer>
+            <StackPanel Name="root" Margin="10">
+                <TextBox
+                            Margin="10"
+                            Tag="Название.."
+                            FontSize="{StaticResource H1}"
+                            Style="{StaticResource BaseTextBox}"
+                            Text="{Binding BindingGroupName,UpdateSourceTrigger=PropertyChanged}"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap" />
+
+                <Grid Margin="0,30,0,0">
+                    <Border CornerRadius="5">
+                        <Border.OpacityMask>
+                            <VisualBrush>
+                                <VisualBrush.Visual>
+                                    <Border
+                                                Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Border}}"
+                                                Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Border}}"
+                                                Background="Black"
+                                                CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=Border}}"
+                                                SnapsToDevicePixels="True" />
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </Border.OpacityMask>
+
+                        <StackPanel HorizontalAlignment="Center">
+
+                            <UniformGrid Background="{StaticResource DarkBrush}" Columns="2">
+                                <TextBlock  Margin="10"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BaseText}"
+                                            Text="Авторы: "/>
+                                <StackPanel Orientation="Vertical">
+                                    <ItemsControl ItemsSource="{Binding Authors}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border
+                                                        Margin="3"
+                                                        Background="{StaticResource MediumBaseBrush}"
+                                                        CornerRadius="3"
+                                                        Cursor="Hand">
+                                                    <TextBlock
+                                                            Margin="5"
+                                                            VerticalAlignment="Center"
+                                                            Foreground="White"
+                                                            Style="{StaticResource BaseText}"
+                                                            Text="{Binding GetAuthor}"
+                                                            TextDecorations="Underline"
+                                                            TextWrapping="Wrap" />
+
+                                                    <Border.InputBindings>
+                                                        <MouseBinding
+                                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.Authors}"
+                                                                CommandParameter="{Binding}"
+                                                                Gesture="LeftClick" />
+                                                    </Border.InputBindings>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </UniformGrid>
+                            <UniformGrid Background="{StaticResource MediumBrush}" Columns="2">
+                                <TextBlock  Margin="10"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BaseText}"
+                                            Text="Ключевые слова: "/>
+                                <StackPanel Orientation="Vertical">
+                                    <StackPanel Orientation="Vertical">
+                                        <ItemsControl ItemsSource="{Binding KeyWords,UpdateSourceTrigger=PropertyChanged}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border
+                                                        Margin="3"
+                                                        Background="{StaticResource MediumBaseBrush}"
+                                                        CornerRadius="3"
+                                                        Cursor="Hand">
+                                                        <TextBlock
+                                                            Margin="5"
+                                                            VerticalAlignment="Center"
+                                                            Foreground="White"
+                                                            Style="{StaticResource BaseText}"
+                                                            Text="{Binding Value,Mode=TwoWay}"
+                                                            TextDecorations="Underline"
+                                                            TextWrapping="Wrap" />
+
+                                                        <!--<Border.InputBindings>
+                                                            <MouseBinding
+                                                                Command="{Binding DeleteKeyWord}" Gesture="LeftClick" />
+                                                        </Border.InputBindings>-->
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox  Margin="10,10,5,10"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BaseTextBox}"
+                                            Text="{Binding NewKeyWord,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                                            TextWrapping="Wrap" Width="190" />
+                                        <Button
+                                        Margin="10"
+                                        Command="{Binding AddKeyWord}"
+                                        Cursor="Hand" 
+                                        Style="{StaticResource BaseButton}" HorizontalAlignment="Right">
+                                            <ContentControl Height="20" Width="20" Content="{StaticResource PlusElemIcon}" />
+                                        </Button>
+                                    </StackPanel>
+                                </StackPanel>
+
+                               
+                            </UniformGrid>
+
+                            <UniformGrid Background="{StaticResource DarkBrush}" Columns="2">
+                                <TextBlock  Margin="10"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BaseText}"
+                                            Text="Дата публикации: "/>
+                                <TextBox
+                                            Margin="10"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BaseTextBox}"
+                                            Text="{Binding PublishDate}"
+                                            TextWrapping="Wrap" MaxLength="4" >
+                                </TextBox>
+                            </UniformGrid>
+
+                            <UniformGrid Background="{StaticResource MediumBrush}" Columns="2">
+                                <TextBlock  Margin="10"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BaseText}"
+                                            Text="Издательство: "/>
+                                <TextBox
+                                            Margin="10"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BaseTextBox}"
+                                            Text="{Binding Publisher}"
+                                            TextWrapping="Wrap">
+                                </TextBox>
+                            </UniformGrid>
+
+                            <UniformGrid Background="{StaticResource DarkBrush}" Columns="2">
+                                <TextBlock  Margin="10"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BaseText}"
+                                            Text="Библиографическое описание:"/>
+                                <ScrollViewer
+                                            MaxHeight="100"
+                                            HorizontalScrollBarVisibility="Disabled"
+                                            VerticalScrollBarVisibility="Auto">
+                                    <TextBox
+                                                Margin="10"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource BaseTextBox}"
+                                                Text="{Binding BibliographicDescription,UpdateSourceTrigger=PropertyChanged}"
+                                                TextWrapping="Wrap" />
+                                </ScrollViewer>
+                            </UniformGrid>
+
+                            <UniformGrid Background="{StaticResource MediumBrush}" Columns="2">
+                                <TextBlock  Margin="10"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BaseText}"
+                                            Text="Описание:  "/>
+                                <ScrollViewer
+                                            MaxHeight="100"
+                                            HorizontalScrollBarVisibility="Disabled"
+                                            VerticalScrollBarVisibility="Auto">
+                                    <TextBox
+                                                Margin="10"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource BaseTextBox}"
+                                                Text="{Binding Description}"
+                                                TextWrapping="Wrap" />
+                                </ScrollViewer>
+                            </UniformGrid>
+
+                            <UniformGrid Background="{StaticResource DarkBrush}" Columns="2">
+                                <TextBlock
+                                            Margin="10"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BaseText}"
+                                            Text="Ссылка: " />
+
+                                <TextBox
+                                            Margin="10"
+                                            VerticalAlignment="Center"
+                                            Foreground="{StaticResource MediumBaseBrush}"
+                                            Style="{StaticResource BaseTextBox}"
+                                            Text="{Binding Url}"
+                                            TextDecorations="Underline"
+                                            TextWrapping="Wrap">
+                                </TextBox>
+
+                            </UniformGrid>
+
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </StackPanel>
+
+        </ScrollViewer>
+    </Grid>
+</Window>

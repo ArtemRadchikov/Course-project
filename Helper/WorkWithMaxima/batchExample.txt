@@ -1,0 +1,16 @@
+f(x):={fx};
+stringout("{path}func.txt",f(x),tex(f(x),false));
+a:{a};
+b:{b};
+l:(b-a)/2;
+stringout("{path}SegmentValues.txt",a,b,l);
+declare(n,integer);
+a0:1/l*integrate(f(x),x,a,b);
+stringout("{path}a0.txt",a0,tex(a0,false));
+an:1/l*integrate(f(x)*cos(%pi*n*x/l),x,a,b);
+stringout("{path}an.txt",an,tex(an,false));
+bn:1/l*integrate(f(x)*sin(%pi*n*x/l),x,a,b);
+stringout("{path}bn.txt",bn,tex(bn,false));
+FS:a0/2+sum((an*cos(%pi*n*x/l)+bn*sin(%pi*n*x/l)),n,1,k);
+stringout("{path}FS.txt",FS,tex(FS,false));
+quit();

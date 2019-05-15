@@ -1,0 +1,87 @@
+﻿<Page x:Class="Helper.View.DecisionsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:controls="clr-namespace:WpfMath.Controls;assembly=WpfMath"
+      xmlns:local="clr-namespace:Helper.View"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Decisions">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="27*"/>
+            <RowDefinition Height="350*"/>
+            <RowDefinition Height="27*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="400*"/>
+            <ColumnDefinition Width="941*"/>
+        </Grid.ColumnDefinitions>
+
+        <ListView  
+            ItemsSource="{Binding Decisions}" 
+            HorizontalContentAlignment="Stretch"
+            IsSynchronizedWithCurrentItem="True" 
+            BorderThickness="0"
+            
+            SelectedItem="{Binding SelectedDecision}" 
+            Grid.Column="0" Grid.Row="1">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Template"  Value="{StaticResource DecisionListItems}" />
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+
+        <Border BorderBrush="Aqua" BorderThickness="1" Margin="2" Grid.Column="1"  Grid.Row="1" >
+            <ContentControl Visibility="{Binding DecisionsIsEmpty,UpdateSourceTrigger=PropertyChanged}" Content="{Binding SelectedDecision}">
+                <ContentControl.ContentTemplate>
+                    <DataTemplate>
+                        <ScrollViewer>
+                            <StackPanel>
+                                <TextBlock Text="Функция" TextAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" >
+                                    <controls:FormulaControl Formula="f(x)= " VerticalAlignment="Center"/>
+                                    <controls:FormulaControl Formula="{Binding Path=OriginalValue.LaTeXValue}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <TextBlock Text="Интервал" TextAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="Задана на промежутке "/>
+                                    <controls:FormulaControl Formula="["/>
+                                    <controls:FormulaControl Formula="{Binding Path=LowerSegmentValue}"/>
+                                    <controls:FormulaControl Formula="," VerticalContentAlignment="Bottom"/>
+                                    <controls:FormulaControl Formula="{Binding Path=UpperSegmentValue}" VerticalContentAlignment="Bottom"/>
+                                    <controls:FormulaControl Formula="]" />
+                                </StackPanel>
+                                <TextBlock Text="Коэффициенты" TextAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <controls:FormulaControl Formula="a_0 ="/>
+                                    <controls:FormulaControl Formula="{Binding Path=Coefficient_a0.LaTeXValue}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <controls:FormulaControl Formula="a_n ="/>
+                                    <controls:FormulaControl Formula="{Binding Path=Coefficient_an.LaTeXValue}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <controls:FormulaControl Formula="b_n ="/>
+                                    <controls:FormulaControl Formula="{Binding Path=Coefficient_bn.LaTeXValue}"/>
+                                </StackPanel>
+                                <TextBlock Text="Ряд Фурье" TextAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <controls:FormulaControl Formula="f(x) \sim "/>
+                                    <controls:FormulaControl Formula="{Binding Path=FourierSeries.LaTeXValue}"/>
+                                </StackPanel>
+                                <TextBlock Text="Частичная сумма порядка n" TextAlignment="Center"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </DataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
+        </Border>
+
+        <Button Command="{Binding AddItem}">+</Button>
+
+    </Grid>
+</Page>
