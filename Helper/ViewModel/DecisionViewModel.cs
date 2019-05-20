@@ -20,7 +20,6 @@ namespace Helper.ViewModel
         Decision selectedDecision;
         public ObservableCollection<Decision> Decisions { get; set; }
 
-        bool decisionsIsEmpty;
         public Decision SelectedDecision
         {
             get { return selectedDecision; }
@@ -30,6 +29,8 @@ namespace Helper.ViewModel
                 OnPropertyChanged("SelectedDecision");
             }
         }
+
+        bool decisionsIsEmpty;
 
         public Visibility DecisionsIsEmpty
         {
@@ -73,30 +74,27 @@ namespace Helper.ViewModel
                 {
                     try
                     {
-                        AddDecision addDecision = new AddDecision() { DataContext=new AddDecisionViewModel()};
+                        AddDecision addDecision = new AddDecision();
                         addDecision.ShowDialog();
 
-                        string path = AppDomain.CurrentDomain.BaseDirectory;
-                        path = path.Replace(@"bin\Debug\", @"WorkWithMaxima\");
-                        path = path.Replace(@"\", @"/");
-                        Process pr=Process.Start("D:/Helper/Helper/WorkWithMaxima/maxima.bat", "-q -b " + '"' + "D:/Helper/Helper/WorkWithMaxima/batch.txt" + '"');
+                        string path = Paths.PathToMaximaLogs;
 
-                        pr.WaitForExit(10000);
+                        using (Loading loading = new Loading(StartCalculationProcces))
+                        {
+                            loading.ShowDialog();
+                        }
 
-                        path += "newDecision/";
-
-                    
-                        SymbolicExpretion OriginalValue = CreateSymbolicExpretion(path + "func.txt");
-
-                        SymbolicExpretion Coefficient_a0 = CreateSymbolicExpretion(path + "a0.txt");
-                        SymbolicExpretion Coefficient_an = CreateSymbolicExpretion(path + "an.txt");
-                        SymbolicExpretion Coefficient_bn = CreateSymbolicExpretion(path + "bn.txt");
-                        SymbolicExpretion FourierSeries = CreateSymbolicExpretion(path + "FS.txt");
+                        #region Get values and create object
+                        SymbolicExpretion OriginalValue = CreateSymbolicExpretion(Paths.PathToNewDecesionFunctionValues);
+                        SymbolicExpretion Coefficient_a0 = CreateSymbolicExpretion(Paths.PathToNewDecesionСoefficientValues_a0);
+                        SymbolicExpretion Coefficient_an = CreateSymbolicExpretion(Paths.PathToNewDecesionСoefficientValues_an);
+                        SymbolicExpretion Coefficient_bn = CreateSymbolicExpretion(Paths.PathToNewDecesionСoefficientValues_bn);
+                        SymbolicExpretion FourierSeries = CreateSymbolicExpretion(Paths.PathToNewDecesionFourierSeriesValues);
                         DateTime СreationTime = DateTime.Now;
 
                         string[] values;
 
-                        using (StreamReader sr = new StreamReader(path + "SegmentValues.txt"))
+                        using (StreamReader sr = new StreamReader(Paths.PathToNewDecesionSegmentValues))
                         {
                             values = sr.ReadToEnd().Split(';');
                         }
@@ -107,10 +105,24 @@ namespace Helper.ViewModel
 
                         Decision decision = new Decision(OriginalValue, LowerSegmentValue, UpperSegmentValue, HalfPeriod, Coefficient_a0, Coefficient_an, Coefficient_bn, FourierSeries, СreationTime);
 
-                        
                         DecisionsIsEmpty = Visibility.Visible;
+                        Decisions.Add(decision);
+                        #endregion
 
-                        
+                        void StartCalculationProcces()
+                        {                               
+                            var startInfo = new System.Diagnostics.ProcessStartInfo
+                            {
+                                FileName = Paths.PathMaximaCMD,
+                                Arguments = "-q -b " + '"' + Paths.PathToBatchCalculateNewDecesion + '"',  // Путь к приложению
+                                UseShellExecute = false,
+                                CreateNoWindow = true
+                            };
+                            Process pr = Process.Start(startInfo);
+
+                            pr.WaitForExit();                                                                                                                                                              
+                        }
+
                     }
                     catch (Exception ex)
                     {

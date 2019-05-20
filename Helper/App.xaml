@@ -17,6 +17,8 @@
                 <ResourceDictionary Source="Styles\UserControl.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
+
         </ResourceDictionary>
+        
     </Application.Resources>
 </Application>

@@ -71,7 +71,7 @@ namespace Helper.ViewModel
                     {
                         BooksView.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
                     }
-                });
+                },BooksView.SortDescriptions.Count!=0);
             }
         }
 
@@ -197,7 +197,8 @@ namespace Helper.ViewModel
                     w.DataContext = bm;
                     w.ShowDialog();
 
-                    Books.Add(book);
+                    if(book.PublishDate!=0)
+                        Books.Add(book);
                 });
             }
         }

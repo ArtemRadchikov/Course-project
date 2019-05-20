@@ -28,8 +28,12 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    
+
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="94*"/>
             <RowDefinition Height="136*"/>
@@ -37,10 +41,10 @@
             <RowDefinition Height="117*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Введите функцию f(x):" Margin="0,0,0,20"/>
-        <TextBox Grid.Row="0" x:Name="inputF"  Text="{Binding OriginalValue,Mode=OneWayToSource}" Margin="0,0,0,20"/>
-        <controls:FormulaControl x:Name="FC" Grid.Row="1" Formula="{Binding Text,ElementName=inputF}" Margin="0,0,0,1"/>
-        <StackPanel Grid.Row="2" Orientation="Horizontal">
+        <TextBlock Text="Введите функцию f(x):" Margin="0,0,0,20" Grid.ColumnSpan="2"/>
+        <TextBox Grid.Row="0" x:Name="inputF"  Text="{Binding OriginalValue,Mode=OneWayToSource}" Margin="0,0,0,20" Grid.ColumnSpan="2"/>
+        <controls:FormulaControl x:Name="FC" Grid.Row="1" Formula="{Binding Text,ElementName=inputF}" Margin="0,0,0,1" Grid.ColumnSpan="2"/>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Grid.ColumnSpan="2">
             <TextBlock Text="Задана на промежутке "/>
             <TextBlock Text="["/>
             <TextBox x:Name="lsv" Text="{Binding LowerSegmentValue,Mode=TwoWay}" Width="30"/>
@@ -48,6 +52,6 @@
             <TextBox x:Name="usv" Text="{Binding UpperSegmentValue,Mode=TwoWay}" Width="30"/>
             <TextBlock Text="]"/>
         </StackPanel>
-        <Button Grid.Row="4" Content="OK" Command="{Binding CreateFile}"/>
+        <Button Grid.Row="3" Content="OK" Command="{Binding CreateFile}" CommandParameter="{Binding}" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>

@@ -5,27 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Helper.View"
         xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:b="clr-namespace:ReactiveValidation.WPF.Behaviors;assembly=ReactiveValidation"
         mc:Ignorable="d"
         MinWidth="650"
         MinHeight="500" ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Title="BookEditorWindow">
-    <Window.Resources>
-        <Style TargetType="TextBox">
-            <Style.Triggers>
-                <Trigger Property="Validation.HasError" Value="True">
-                    <Setter Property="ToolTip"
-                    Value="{Binding RelativeSource={RelativeSource Self},
-                        Path=(Validation.Errors)[0].ErrorContent}" />
-                    <Setter Property="Foreground" Value="Red" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </Window.Resources>
+
+    
     <Grid
                 Grid.Row="2"
                 Background="{StaticResource LightBrush}">
-
+        
         <ScrollViewer>
             <StackPanel Name="root" Margin="10">
                 <TextBox
@@ -34,27 +25,13 @@
                             MaxLength="200"
                             FontSize="{StaticResource H1}"
                             Style="{StaticResource BaseTextBox}"
-                            Text="{Binding BookName,UpdateSourceTrigger=PropertyChanged}"
+                            Text="{Binding BookName,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}"
                             TextAlignment="Center"
                             TextWrapping="Wrap" />
 
                 <Grid Margin="0,30,0,0">
                     <Border CornerRadius="5">
-                        <Border.OpacityMask>
-                            <VisualBrush>
-                                <VisualBrush.Visual>
-                                    <Border
-                                                Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Border}}"
-                                                Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Border}}"
-                                                Background="Black"
-                                                CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=Border}}"
-                                                SnapsToDevicePixels="True" />
-                                </VisualBrush.Visual>
-                            </VisualBrush>
-                        </Border.OpacityMask>
-
                         <StackPanel HorizontalAlignment="Center">
-
                             <UniformGrid Background="{StaticResource DarkBrush}" Columns="2">
                                 <TextBlock  Margin="10"
                                             VerticalAlignment="Center"
@@ -67,7 +44,7 @@
                                             MaxLength="60"
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BaseTextBox}"
-                                            Text="{Binding NewAuthor,UpdateSourceTrigger=PropertyChanged}"
+                                            Text="{Binding NewAuthor,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}"
                                             TextWrapping="Wrap" Width="190" />
                                             <Button
                                                 Margin="10"
@@ -85,7 +62,7 @@
                                     </StackPanel>
 
                                     <StackPanel Orientation="Vertical">
-                                        <ItemsControl ItemsSource="{Binding Authors,UpdateSourceTrigger=PropertyChanged}">
+                                        <ItemsControl ItemsSource="{Binding Authors,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <WrapPanel />
@@ -94,6 +71,7 @@
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
                                                     <Border
+                                                        ToolTip="ПКМ - удаление"
                                                         Margin="3"
                                                         Background="{StaticResource MediumBaseBrush}"
                                                         CornerRadius="3"
@@ -103,7 +81,7 @@
                                                             VerticalAlignment="Center"
                                                             Foreground="White"
                                                             Style="{StaticResource BaseText}"
-                                                            Text="{Binding Value}"
+                                                            Text="{Binding GetAuthor}"
                                                             TextDecorations="Underline"
                                                             TextWrapping="Wrap" />
                                                         <Border.InputBindings>
@@ -117,7 +95,6 @@
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
                                     </StackPanel>
-
                                 </StackPanel>
                             </UniformGrid>
                             <UniformGrid Background="{StaticResource MediumBrush}" Columns="2">
@@ -133,7 +110,7 @@
                                             MaxLength="60"
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BaseTextBox}"
-                                            Text="{Binding NewKeyWord,UpdateSourceTrigger=PropertyChanged}"
+                                            Text="{Binding NewKeyWord,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}"
                                             TextWrapping="Wrap" Width="190" />
                                             <Button
                                                 Margin="10"
@@ -165,6 +142,7 @@
                                                         CornerRadius="3"
                                                         Cursor="Hand">
                                                         <TextBlock
+                                                            ToolTip="ПКМ - удаление"
                                                             Margin="5"
                                                             VerticalAlignment="Center"
                                                             Foreground="White"
@@ -197,7 +175,7 @@
                                             Margin="10"
                                             MaxLength="4"
                                             VerticalAlignment="Center"
-                                            Text="{Binding PublishDate,UpdateSourceTrigger=PropertyChanged}"
+                                            Text="{Binding PublishDate,Mode=TwoWay,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}"
                                             Style="{StaticResource BaseTextBox}"
                                             TextWrapping="Wrap">
                                     
@@ -214,9 +192,8 @@
                                             Margin="10"
                                             MaxLength="200"
                                             VerticalAlignment="Center"
-                                            Cursor="Hand"
                                             Style="{StaticResource BaseTextBox}"
-                                            Text="{Binding Publisher}"
+                                            Text="{Binding Publisher,Mode=TwoWay,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}"
                                             TextWrapping="Wrap">
                                 </TextBox>
                             </UniformGrid>
@@ -238,7 +215,7 @@
                                                 VerticalAlignment="Center"
                                                 Style="{StaticResource BaseTextBox}"
                                                 MaxLength="255"
-                                                Text="{Binding BibliographicDescription}"
+                                                Text="{Binding BibliographicDescription,Mode=TwoWay}"
                                                 TextWrapping="Wrap" />
                                 </ScrollViewer>
                             </UniformGrid>
@@ -258,7 +235,7 @@
                                                 Margin="10"
                                                 VerticalAlignment="Center"
                                                 Style="{StaticResource BaseTextBox}"
-                                                Text="{Binding Description}"
+                                                Text="{Binding Description,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
                                                 TextWrapping="Wrap" />
                                 </ScrollViewer>
                             </UniformGrid>
@@ -276,15 +253,20 @@
                                             VerticalAlignment="Center"
                                             Foreground="{StaticResource MediumBaseBrush}"
                                             Style="{StaticResource BaseTextBox}"
-                                            Text="{Binding Url}"
+                                            Text="{Binding Url,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}"
                                             TextDecorations="Underline"
                                             TextWrapping="Wrap">
                                     
                                 </TextBox>
 
+                            </UniformGrid >
+                            <UniformGrid Columns="2" >
+                                <Button Background="{StaticResource DarkBrush}" Content="CANCEL" HorizontalAlignment="Left" Width="100" Command="{Binding Cancel}" Style="{StaticResource BaseButton}" Margin="20,25,25,20"/>
+                                <Button Content="OK" HorizontalAlignment="Right" Width="100" Style="{StaticResource BaseButton}" Command="{Binding Confirm}" Margin="20,25,25,20"/>
                             </UniformGrid>
-
-                        </StackPanel>
+                               
+                            </StackPanel>
+                            
                     </Border>
                 </Grid>
             </StackPanel>

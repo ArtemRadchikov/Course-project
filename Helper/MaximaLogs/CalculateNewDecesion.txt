@@ -1,0 +1,16 @@
+f(x):=+3;
+stringout("D:/Helper/Helper/MaximaLogs/newDecision/func.txt",f(x),tex(f(x),false));
+a:-3;
+b:3;
+l:(b-a)/2;
+stringout("D:/Helper/Helper/MaximaLogs/newDecision/SegmentValues.txt",a,b,l);
+declare(n,integer);
+a0:1/l*integrate(f(x),x,a,b);
+stringout("D:/Helper/Helper/MaximaLogs/newDecision/a0.txt",a0,tex(a0,false));
+an:1/l*integrate(f(x)*cos(%pi*n*x/l),x,a,b);
+stringout("D:/Helper/Helper/MaximaLogs/newDecision/an.txt",an,tex(an,false));
+bn:1/l*integrate(f(x)*sin(%pi*n*x/l),x,a,b);
+stringout("D:/Helper/Helper/MaximaLogs/newDecision/bn.txt",bn,tex(bn,false));
+FS:a0/2+sum((an*cos(%pi*n*x/l)+bn*sin(%pi*n*x/l)),n,1,k);
+stringout("D:/Helper/Helper/MaximaLogs/newDecision/FS.txt",FS,tex(FS,false));
+quit();

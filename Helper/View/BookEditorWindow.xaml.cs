@@ -23,5 +23,7 @@ namespace Helper.View
         {
             InitializeComponent();
         }
+
+        
     }
 }

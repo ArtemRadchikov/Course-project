@@ -77,6 +77,7 @@
     <Compile Include="Model\Book.cs" />
     <Compile Include="Model\IDataErrorInfo.cs" />
     <Compile Include="Model\KeyWordItem.cs" />
+    <Compile Include="Model\Paths.cs" />
     <Compile Include="ViewModel\AddDecisionViewModel.cs" />
     <Compile Include="ViewModel\BookEditorViewModel.cs" />
     <Compile Include="ViewModel\DecisionViewModel.cs" />
@@ -84,6 +85,9 @@
     <Compile Include="ViewModel\StartPageViewModel.cs" />
     <Compile Include="View\BookEditorWindow.xaml.cs">
       <DependentUpon>BookEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Loading.xaml.cs">
+      <DependentUpon>Loading.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -136,6 +140,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\LibraryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Loading.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -53,24 +53,28 @@ namespace Helper.ViewModel
             {
                 return new DelegateCommand(() =>
                     {
-                        string path = AppDomain.CurrentDomain.BaseDirectory;
-                        path= path.Replace(@"bin\Debug\", @"WorkWithMaxima\");
-                        path = path.Replace(@"\", @"\\");
-
                         string Text;
-                        using (StreamReader sr = new StreamReader(path + "batchExample.txt"))
+                        using (StreamReader sr = new StreamReader(Paths.PathToBatchExample))
                         {
                             Text = sr.ReadToEnd();
                         }
 
                         Text = Text.Replace("{fx}", originalValue);
-                        Text = Text.Replace("{path}", path + @"newDecision\\");
+                        Text = Text.Replace("{path}", Paths.PathToNewDecesion);
                         Text = Text.Replace("{a}", LowerSegmentValue);
                         Text = Text.Replace("{b}", UpperSegmentValue);
                         MessageBox.Show(Text);
-                        using (StreamWriter sw = new StreamWriter(path + "batch.txt", false))
+                        using (StreamWriter sw = new StreamWriter(Paths.PathToBatchCalculateNewDecesion, false))
                         {
                             sw.Write(Text);
+                        }
+
+                        foreach (System.Windows.Window window in System.Windows.Application.Current.Windows)
+                        {
+                            if (window.DataContext == this)
+                            {
+                                window.Close();
+                            }
                         }
                     }
                  );

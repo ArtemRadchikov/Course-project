@@ -1,5 +1,4 @@
-﻿using Helper.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,14 +15,13 @@ using System.Windows.Shapes;
 namespace Helper.View
 {
     /// <summary>
-    /// Логика взаимодействия для AddDecision.xaml
+    /// Логика взаимодействия для WindowLoading.xaml
     /// </summary>
-    public partial class AddDecision : Window
+    public partial class WindowLoading : Window
     {
-        public AddDecision()
+        public WindowLoading()
         {
             InitializeComponent();
-            this.DataContext = new AddDecisionViewModel();
         }
     }
 }

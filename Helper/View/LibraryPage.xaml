@@ -120,29 +120,26 @@
                 DataContext="{Binding SelectedBook}">
 
                 <ScrollViewer>
+                    <ScrollViewer.Style>
+                        <Style TargetType="ScrollViewer">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=DataContext}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ScrollViewer.Style>
                     <StackPanel Name="root" Margin="10">
                         <TextBlock
                             Margin="10"
                             FontSize="{StaticResource H1}"
                             Style="{StaticResource BaseText}"
-                            Text="{Binding BindingGroupName,UpdateSourceTrigger=PropertyChanged}"
+                            Text="{Binding BookName,UpdateSourceTrigger=PropertyChanged}"
                             TextAlignment="Center"
                             TextWrapping="Wrap" />
 
                         <Grid Margin="0,30,0,0">
                             <Border CornerRadius="5">
-                                <Border.OpacityMask>
-                                    <VisualBrush>
-                                        <VisualBrush.Visual>
-                                            <Border
-                                                Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Border}}"
-                                                Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Border}}"
-                                                Background="Black"
-                                                CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=Border}}"
-                                                SnapsToDevicePixels="True" />
-                                        </VisualBrush.Visual>
-                                    </VisualBrush>
-                                </Border.OpacityMask>
 
                                 <StackPanel HorizontalAlignment="Center">
 
@@ -260,7 +257,6 @@
                                         <TextBlock
                                             Margin="10"
                                             VerticalAlignment="Center"
-                                            Cursor="Hand"
                                             Style="{StaticResource BaseText}"
                                             Text="{Binding Publisher}"
                                             TextWrapping="Wrap">
