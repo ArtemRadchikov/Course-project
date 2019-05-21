@@ -11,7 +11,7 @@ using Helper.Model;
 
 namespace Helper.ViewModel
 {
-    class AddDecisionViewModel:BaseVM
+    class AdddecisionViewModel:BaseVM
     {
         string originalValue;
         string lowerSegmentValue;
@@ -60,11 +60,11 @@ namespace Helper.ViewModel
                         }
 
                         Text = Text.Replace("{fx}", originalValue);
-                        Text = Text.Replace("{path}", Paths.PathToNewDecesion);
+                        Text = Text.Replace("{path}", Paths.PathToNewDecision);
                         Text = Text.Replace("{a}", LowerSegmentValue);
                         Text = Text.Replace("{b}", UpperSegmentValue);
-                        MessageBox.Show(Text);
-                        using (StreamWriter sw = new StreamWriter(Paths.PathToBatchCalculateNewDecesion, false))
+
+                        using (StreamWriter sw = new StreamWriter(Paths.PathToBatchCalculateNewDecision, false))
                         {
                             sw.Write(Text);
                         }

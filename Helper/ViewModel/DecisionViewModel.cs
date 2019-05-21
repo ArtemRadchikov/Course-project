@@ -4,6 +4,7 @@ using Helper.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -11,40 +12,24 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Helper.ViewModel
 {
     public class DecisionViewModel:BaseVM
     {
-        Decision selectedDecision;
+        Decision selectedDecesion;
         public ObservableCollection<Decision> Decisions { get; set; }
+        public ICollectionView DecisionsView { get; set; }
 
-        public Decision SelectedDecision
+        public Decision SelectedDecesion
         {
-            get { return selectedDecision; }
+            get { return selectedDecesion; }
             set
             {
-                selectedDecision = value;
-                OnPropertyChanged("SelectedDecision");
-            }
-        }
-
-        bool decisionsIsEmpty;
-
-        public Visibility DecisionsIsEmpty
-        {
-            get
-            {
-                if (decisionsIsEmpty)
-                    return Visibility.Hidden;
-                else
-                    return Visibility.Visible;
-            }
-            set
-            {
-                decisionsIsEmpty= !(value == Visibility.Visible);
-                OnPropertyChanged("DecisionsIsEmpty");
+                selectedDecesion = value;
+                OnPropertyChanged("SelectedDecesion");
             }
         }
 
@@ -54,47 +39,80 @@ namespace Helper.ViewModel
             SymbolicExpretion a0 = new SymbolicExpretion("(2*(%pi ^ 3 + 6 *% pi)) / (3 *% pi)", @"{\frac{2 \left(\pi^3+6 \pi\right)}{3 \pi}}");
             SymbolicExpretion an = new SymbolicExpretion("(4 * (-1) ^ n) / n ^ 2", @"{\frac{4 \left(-1\right)^{n}}{n^2}}");
             SymbolicExpretion bn = new SymbolicExpretion("0", "0");
-            SymbolicExpretion fs = new SymbolicExpretion("", @"4 \sum_{n=1}^{k}{{\frac{\left(-1\right)^{n} \cos \left(n x\right) }{n^2}}}+{\frac{\pi^3+6 \pi}{3 \pi}}");
-            Decision decision = new Decision(fx, @"-\pi", @"\pi", @"\pi", a0, an, bn, fs, DateTime.Now);
-
+            SymbolicExpretion fs = new SymbolicExpretion("25-(6*'sum(((-1)^n*sin((%pi*n*x)/3))/n,n,1,k))/%pi", @"4 \sum_{n=1}^{k}{{\frac{\left(-1\right)^{n} \cos \left(n x\right) }{n^2}}}+{\frac{\pi^3+6 \pi}{3 \pi}}");
+            Decision decesion = new Decision(fx, @"-\pi", @"\pi", @"\pi", a0, an, bn, fs, DateTime.Now);
             Decisions = new ObservableCollection<Decision>();
-            Decisions.Add(decision);
-            decisionsIsEmpty = Decisions.Count == 0;
+            Decisions.Add(decesion);
+            Thread.Sleep(5000);
+            Decisions.Add(decesion);
+            Thread.Sleep(5000);
 
-            //SelectedDecision = Decisions.FirstOrDefault();
+            Decisions.Add(decesion);
+            DecisionsView = CollectionViewSource.GetDefaultView(Decisions);
+
+            //SelectedDecesion = Decisions.FirstOrDefault();
         }
 
+        public ICommand Sort
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    if (DecisionsView.SortDescriptions.Count > 0)
+                    {
+                        DecisionsView.SortDescriptions.Clear();
+                    }
+                    else
+                    {
+                        DecisionsView.SortDescriptions.Add(new SortDescription("СreationTime", ListSortDirection.Ascending));
+                    }
+                }, DecisionsView.SortDescriptions.Count != 0);
+            }
+        }
+        public ICommand DeleteDecesion
+        {
+            get
+            {
+                return new DelegateCommand<Decision>((decesion) =>
+                {
+                    Decisions.Remove(decesion);
+                    SelectedDecesion = Decisions.FirstOrDefault();
+
+                }, (book) => book != null);
+            }
+        }
         public DelegateCommand AddItem
         {
             get
             {
-                decisionsIsEmpty = Decisions.Count == 0;
-
                 return new DelegateCommand(() =>
                 {
                     try
                     {
-                        AddDecision addDecision = new AddDecision();
-                        addDecision.ShowDialog();
+                        AddDecision addDecesion = new AddDecision();
+                        addDecesion.ShowDialog();
 
                         string path = Paths.PathToMaximaLogs;
 
-                        using (Loading loading = new Loading(StartCalculationProcces))
+                        using (Loading loading = new Loading(()=>StartCalculationProcces(Paths.PathToBatchCalculateNewDecision)))
                         {
                             loading.ShowDialog();
                         }
 
+                        SelectedDecesion = Decisions.FirstOrDefault();
+
                         #region Get values and create object
-                        SymbolicExpretion OriginalValue = CreateSymbolicExpretion(Paths.PathToNewDecesionFunctionValues);
-                        SymbolicExpretion Coefficient_a0 = CreateSymbolicExpretion(Paths.PathToNewDecesionСoefficientValues_a0);
-                        SymbolicExpretion Coefficient_an = CreateSymbolicExpretion(Paths.PathToNewDecesionСoefficientValues_an);
-                        SymbolicExpretion Coefficient_bn = CreateSymbolicExpretion(Paths.PathToNewDecesionСoefficientValues_bn);
-                        SymbolicExpretion FourierSeries = CreateSymbolicExpretion(Paths.PathToNewDecesionFourierSeriesValues);
+                        SymbolicExpretion OriginalValue = CreateSymbolicExpretion(Paths.PathToNewDecisionFunctionValues);
+                        SymbolicExpretion Coefficient_a0 = CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_a0);
+                        SymbolicExpretion Coefficient_an = CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_an);
+                        SymbolicExpretion Coefficient_bn = CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_bn);
+                        SymbolicExpretion FourierSeries = CreateSymbolicExpretion(Paths.PathToNewDecisionFourierSeriesValues);
                         DateTime СreationTime = DateTime.Now;
 
                         string[] values;
 
-                        using (StreamReader sr = new StreamReader(Paths.PathToNewDecesionSegmentValues))
+                        using (StreamReader sr = new StreamReader(Paths.PathToNewDecisionsegmentValues))
                         {
                             values = sr.ReadToEnd().Split(';');
                         }
@@ -103,26 +121,11 @@ namespace Helper.ViewModel
                         string UpperSegmentValue = MaximaTeXParser(values[1]);
                         string HalfPeriod = MaximaTeXParser(values[2]);
 
-                        Decision decision = new Decision(OriginalValue, LowerSegmentValue, UpperSegmentValue, HalfPeriod, Coefficient_a0, Coefficient_an, Coefficient_bn, FourierSeries, СreationTime);
+                        Decision Decesion = new Decision(OriginalValue, LowerSegmentValue, UpperSegmentValue, HalfPeriod, Coefficient_a0, Coefficient_an, Coefficient_bn, FourierSeries, СreationTime);
 
-                        DecisionsIsEmpty = Visibility.Visible;
-                        Decisions.Add(decision);
+                        Decisions.Add(Decesion);
                         #endregion
-
-                        void StartCalculationProcces()
-                        {                               
-                            var startInfo = new System.Diagnostics.ProcessStartInfo
-                            {
-                                FileName = Paths.PathMaximaCMD,
-                                Arguments = "-q -b " + '"' + Paths.PathToBatchCalculateNewDecesion + '"',  // Путь к приложению
-                                UseShellExecute = false,
-                                CreateNoWindow = true
-                            };
-                            Process pr = Process.Start(startInfo);
-
-                            pr.WaitForExit();                                                                                                                                                              
-                        }
-
+                        
                     }
                     catch (Exception ex)
                     {
@@ -132,6 +135,61 @@ namespace Helper.ViewModel
             }
         }
 
+        void StartCalculationProcces(string path)
+        {
+            var startInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = Paths.PathMaximaCMD,
+                Arguments = "-q -b " + '"' + path + '"',  // Путь к приложению
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            Process pr = Process.Start(startInfo);
+
+            pr.WaitForExit();
+        }
+
+        public ICommand AddPlot
+        {
+            get
+            {
+                return new DelegateCommand<string>((ks) =>
+                {
+                    try
+                    {
+                        string Text;
+                        using (StreamReader sr = new StreamReader(Paths.PathToMaximaLogs+ "/plotExample.txt"))
+                        {
+                            Text = sr.ReadToEnd();
+                        }
+
+                        int k = Convert.ToInt32(ks);
+                        Text = Text.Replace("{fx}", SelectedDecesion.OriginalValue.SymbolicValue);
+                        Text = Text.Replace("{gx}", SelectedDecesion.FourierSeries.SymbolicValue);
+                        Text = Text.Replace("{k}", k.ToString());
+                        Text = Text.Replace("{a}", SelectedDecesion.LowerSegmentValue);
+                        Text = Text.Replace("{b}", SelectedDecesion.UpperSegmentValue);
+
+                        using (StreamWriter sw = new StreamWriter(Paths.PathToMaximaLogs + "/plot.txt", false))
+                        {
+                            sw.Write(Text);
+                        }
+
+                        using (Loading loading = new Loading(() => StartCalculationProcces(Paths.PathToMaximaLogs + "/plot.txt")))
+                        {
+                            loading.ShowDialog();
+                        }
+                        //Paths.PathToBatchCalculateNewDecesion
+
+
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                });
+            }
+        }
         #region AddItem functions
         SymbolicExpretion CreateSymbolicExpretion(string FileName)
         {

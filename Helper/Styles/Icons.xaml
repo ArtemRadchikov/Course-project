@@ -8,7 +8,13 @@
             <MD:PackIcon Kind="Library" Foreground="White"/>
         </Viewbox>
     </Grid>
-
+    
+    <Grid x:Key="Clear">
+        <Viewbox Margin="-15" Stretch="Uniform">
+            <MD:PackIcon Kind="Clear" Foreground="White"/>
+        </Viewbox>
+    </Grid>
+    
     <Grid x:Key="LibraryIcon">
         <Viewbox Margin="5" Stretch="Uniform">
             <MD:PackIcon Kind="Library" Foreground="White"/>

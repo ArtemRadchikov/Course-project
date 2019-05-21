@@ -6,7 +6,6 @@
         xmlns:local="clr-namespace:Helper.View"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Topmost="True"
         AllowsTransparency="True"
         Title="Loading" Height="335" Width="338" Loaded="Window_Loaded" Background="{x:Null}" Foreground="{x:Null}" ShowInTaskbar="False" WindowStyle="None">
     <Window.Resources>

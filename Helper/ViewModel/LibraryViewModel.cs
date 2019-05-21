@@ -12,6 +12,8 @@ using System.Windows.Input;
 using System.Diagnostics;
 using System.Windows;
 using Helper.View;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Helper.ViewModel
 {
@@ -75,6 +77,14 @@ namespace Helper.ViewModel
             }
         }
 
+        public ICommand Clear
+        {
+            get
+            {
+                return new DelegateCommand(() => SearchText="", ()=>!string.IsNullOrEmpty(SearchText));
+            }
+        }
+
         public ICommand DeleteBook
         {
             get
@@ -87,7 +97,70 @@ namespace Helper.ViewModel
                 }, (book) => book != null);
             }
         }
+        public ICommand AddItem
+        {
+            get
+            {
 
+                return new DelegateCommand(() =>
+                {
+                    try
+                    {
+                        Book book = new Book();
+                        var w = new BookEditorWindow();
+                        var bm = new BookAddViewModel
+                        {
+                            SelectedBook = book,
+                        };
+                        w.DataContext = bm;
+                        w.ShowDialog();
+
+                        if (book.Name!= "null")
+                            Books.Add(book);
+                        BooksView.Refresh();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                });
+            } 
+        }
+
+        public ICommand EditBook
+        {
+            get
+            {
+                
+                return new DelegateCommand<Book>((book) =>
+                {
+                    try
+                    {
+                        Book editBook = (Book)this.SelectedBook.Clone();
+                        var w = new BookEditorWindow();
+                        var bm = new BookAddViewModel
+                        {
+                            SelectedBook = editBook,
+                        };
+                        w.DataContext = bm;
+                        w.ShowDialog();
+
+                        if (editBook.Name != "null")
+                        {
+                            Books.Remove(book);
+                            Books.Add(editBook);
+                            SelectedBook = Books.LastOrDefault();
+                            BooksView.Refresh();
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }, (book) => book != null);
+            }
+        }
+        
         public LibraryViewModel()
         {
             Books = new ObservableCollection<Book>();
@@ -182,26 +255,7 @@ namespace Helper.ViewModel
             }
         }
 
-        public ICommand AddItem
-        {
-            get
-            {
-                return new DelegateCommand(() =>
-                {
-                    Book book = new Book();
-                    var w = new BookEditorWindow();
-                    var bm = new BookAddViewModel
-                    {
-                        SelectedBook = book,
-                    };
-                    w.DataContext = bm;
-                    w.ShowDialog();
-
-                    if(book.PublishDate!=0)
-                        Books.Add(book);
-                });
-            }
-        }
+        
         public ICommand GoToUrl
         {
             get

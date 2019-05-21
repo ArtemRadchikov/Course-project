@@ -46,7 +46,7 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
-    <ControlTemplate x:Key="DecisionListItems" TargetType="ListBoxItem">
+    <ControlTemplate x:Key="DecesionListItems" TargetType="ListBoxItem">
         <Grid>
             <Border
                 Name="brd"

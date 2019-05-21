@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Helper.Model
 {
+    [Serializable]
     public class BaseVM : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;

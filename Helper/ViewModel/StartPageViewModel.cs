@@ -14,7 +14,7 @@ namespace Helper.ViewModel
 {
     class StartPageViewModel:BaseVM
     {
-        Page decisions;
+        Page Decisions;
         Page library;
         Page main;
         Page currentPage;
@@ -42,7 +42,7 @@ namespace Helper.ViewModel
         }
         public StartPageViewModel()
         {
-            decisions = new DecisionsPage();
+            Decisions = new DecisionsPage();
             library = new LibraryPage();
             main = new MainPage() { DataContext = this };
             FrameOpacity = 1;
@@ -62,7 +62,7 @@ namespace Helper.ViewModel
         {
             get
             {
-                return new DelegateCommand(() => SlowOpacity(decisions));
+                return new DelegateCommand(() => SlowOpacity(Decisions));
             }
         }
 

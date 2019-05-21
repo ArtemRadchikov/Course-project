@@ -16,14 +16,14 @@ using System.Windows.Shapes;
 namespace Helper.View
 {
     /// <summary>
-    /// Логика взаимодействия для AddDecision.xaml
+    /// Логика взаимодействия для Adddecision.xaml
     /// </summary>
     public partial class AddDecision : Window
     {
         public AddDecision()
         {
             InitializeComponent();
-            this.DataContext = new AddDecisionViewModel();
+            this.DataContext = new AdddecisionViewModel();
         }
     }
 }

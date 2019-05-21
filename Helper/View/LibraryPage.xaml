@@ -26,13 +26,13 @@
                 <RowDefinition Height="584*"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-
+            <TextBlock Grid.Column="0" Grid.Row="0" Style="{StaticResource BaseText}" TextAlignment="Center" VerticalAlignment="Center" FontSize="48" FontStyle="Italic" FontWeight="Bold" TextDecorations="{x:Null}" > Книги</TextBlock>
             <StackPanel Grid.Row="1">
                 <DockPanel>
                     <ContentControl Height="35" Background="{StaticResource MediumBaseBrush}"
                             Content="{StaticResource SearchIcon}"
                             Style="{StaticResource IconContent}" />
-                    <TextBox Style="{StaticResource BaseTextBox}"  Tag="Поиск по названию..." Text="{Binding SearchText,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Height="35" >
+                    <TextBox Style="{StaticResource BaseTextBox}"  Tag="Поиск по названию..." Text="{Binding SearchText,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Height="35" Width="315" >
                         <TextBox.ToolTip>
                             <ToolTip>
                                 <StackPanel>
@@ -44,12 +44,13 @@
                             </ToolTip>
                         </TextBox.ToolTip>
                     </TextBox>
+                    <Button Style="{StaticResource BaseButton}" Command="{Binding Clear}" Height="35" Width="35" HorizontalAlignment="Right" Content="{StaticResource Clear}" ToolTip="Очистить"/>
                 </DockPanel>
             </StackPanel>
             <Button Grid.Row="2" Margin="10"
                         Command="{Binding Sort}"
                         Content="Названия"
-                        Style="{StaticResource BaseButton}"/>
+                        Style="{StaticResource BaseButton}" FontSize="24" FontWeight="Bold"/>
 
             <ListView SelectionMode="Extended" 
                       HorizontalContentAlignment="Stretch"
@@ -92,7 +93,7 @@
                 HorizontalAlignment="Center"
                 Orientation="Horizontal">
 
-                    <Button Command="{Binding AddItem}" Style="{StaticResource BaseButton}">
+                    <Button Command="{Binding AddItem}" Style="{StaticResource BaseButton}" ToolTip="Добавить книгу">
                         <ContentControl Height="50" Content="{StaticResource PlusIcon}" />
                     </Button>
 
@@ -100,7 +101,8 @@
                         Margin="-2,0,0,0"
                         Command="{Binding EditBook}"
                         CommandParameter="{Binding SelectedBook}"
-                        Style="{StaticResource BaseButton}">
+                        Style="{StaticResource BaseButton}"
+                        ToolTip="Изменить книгу">
                         <ContentControl Height="50" Content="{StaticResource PanIcon}" />
                     </Button>
 
@@ -108,6 +110,7 @@
                         Margin="-2,0,0,0"
                         Command="{Binding DeleteBook}"
                         CommandParameter="{Binding SelectedBook}"
+                        ToolTip="Удалить книгу"
                         Style="{StaticResource BaseButton}">
                         <ContentControl Height="50" Content="{StaticResource TrashIcon}" />
                     </Button>
@@ -134,7 +137,7 @@
                             Margin="10"
                             FontSize="{StaticResource H1}"
                             Style="{StaticResource BaseText}"
-                            Text="{Binding BookName,UpdateSourceTrigger=PropertyChanged}"
+                            Text="{Binding Name,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}"
                             TextAlignment="Center"
                             TextWrapping="Wrap" />
 

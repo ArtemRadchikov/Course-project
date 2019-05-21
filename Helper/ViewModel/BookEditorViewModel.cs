@@ -6,8 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -25,8 +28,6 @@ namespace Helper.ViewModel
         {
             get { throw new NotImplementedException(); }
         }
-
-        public bool HasError { get; set; }
 
         public string this[string columnName]
         {
@@ -49,10 +50,11 @@ namespace Helper.ViewModel
                         break;
                     case "NewAuthor":
                         {
-                            if(this.Authors.Count == 0 && string.IsNullOrEmpty(this.newAuthor))
-                                msg = "Список авторов не может быть пустым \n Учитывайте формат: Фамилия Имя Отчество";
+                            if(this.Authors.Count == 0 )
+                                if(string.IsNullOrEmpty(this.newAuthor))
+                                    msg = "Список авторов не может быть пустым \n Учитывайте формат: Фамилия Имя Отчество";
                             else
-                                if (!string.IsNullOrEmpty(this.newAuthor) && !isMatch(@"[А-Я][а-я]*\s[А-Я][а-я]*\s[А-Я][а-я]*", this.newAuthor))
+                                if (!string.IsNullOrEmpty(this.newAuthor) && (!isMatch(@"[А-Я][а-я]*\s[А-Я][а-я]*\s[А-Я][а-я]*", this.newAuthor) || !isMatch(@"[A-Z][A-z]*\s[A-Z][a-z]*\s[A-Z][a-z]*", this.newAuthor)))
                                 {
                                     msg = "Введеные данные не соответствуют формату: Фамилия Имя Отчество";
                                 }
@@ -74,9 +76,9 @@ namespace Helper.ViewModel
                         {
                             if (string.IsNullOrEmpty(this.Url))
                                 msg = "Поле не может быть пустым";
-                            else
-                                if (!isMatch(@"[\w,/,-,_,.]+[.][p][d][f]", this.Url))
-                                    msg = "Pначение не соответствует формату ссылки, указывающей на pdf файл";
+                            //else
+                            //    if (!isMatch(@"[\w,/,-,_,.,:,\s,\d]+[.][p][d][f]", this.Url))
+                            //        msg = "Pначение не соответствует формату ссылки, указывающей на pdf файл";
                         }
                         break;
                     case "PublishDate":
@@ -101,8 +103,6 @@ namespace Helper.ViewModel
                         throw new ArgumentException(
                         "Unrecognized property: " + columnName);
                 }
-                if(!string.IsNullOrEmpty(msg))
-                    HasError = true;
 
                 return msg;
             }
@@ -112,7 +112,6 @@ namespace Helper.ViewModel
         {
             get
             {
-                HasError = false;
                 return SelectedBook.Description;
             }
             set
@@ -129,7 +128,6 @@ namespace Helper.ViewModel
             set
             {
                 SelectedBook.Url = value;
-                HasError = false;
                 OnPropertyChanged("Url");
             }
         }
@@ -138,7 +136,6 @@ namespace Helper.ViewModel
         public string Publisher {
             get
             {
-                HasError = false;
                 return SelectedBook.Publisher;
             }
             set
@@ -155,7 +152,6 @@ namespace Helper.ViewModel
         {
             get
             {
-                HasError = false;
                 return newAuthor;
             }
             set
@@ -170,7 +166,6 @@ namespace Helper.ViewModel
         {
             get
             {
-                HasError = false;
                 return newKeyWord;
             }
             set
@@ -184,7 +179,6 @@ namespace Helper.ViewModel
         {
             get
             {
-                HasError = false;
                 return selectedBook;
             }
             set
@@ -199,8 +193,6 @@ namespace Helper.ViewModel
         {
             get
             {
-                HasError = false;
-
                 if (SelectedBook.PublishDate == 0)
                     return "";
                 return SelectedBook.PublishDate.ToString();
@@ -217,7 +209,6 @@ namespace Helper.ViewModel
         {
             get
             {
-                HasError = false;
                 return SelectedBook.Name;
             }
             set
@@ -233,7 +224,6 @@ namespace Helper.ViewModel
             set
             {
                 SelectedBook.KeyWords = value;
-                HasError = false;
                 OnPropertyChanged("KeyWords");
             }
         }
@@ -242,7 +232,6 @@ namespace Helper.ViewModel
         {
             get
             {
-                HasError = false;
                 return SelectedBook.Authors;
             }
             set
@@ -284,8 +273,6 @@ namespace Helper.ViewModel
         {
             get
             {
-                HasError = false;
-
                 return new DelegateCommand<string>((author) =>
                 {
                     string[] names=author.Split(' ');
@@ -310,7 +297,6 @@ namespace Helper.ViewModel
         {
             get
             {
-                HasError = false;
                 return new DelegateCommand<string>((word) =>
                 {
                     SelectedBook.KeyWords.Add(new KeyWordItem(word));
@@ -323,8 +309,21 @@ namespace Helper.ViewModel
         {
             get
             {
-                return new DelegateCommand(() => DisposeThis(),()=>!HasError);
+                return new DelegateCommand(() => 
+                {
+                    DisposeThis();
+                },()=>Validate(SelectedBook));
             }
+        }
+
+        private static bool Validate(Book book)
+        {
+            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            var context = new ValidationContext(book);
+            if (!Validator.TryValidateObject(book, context, results, true))
+                return false;
+            else
+                return true;
         }
 
         public ICommand Cancel
@@ -333,7 +332,7 @@ namespace Helper.ViewModel
             {
                 return new DelegateCommand(() =>
                 {
-                    SelectedBook = null;
+                    SelectedBook.Name="null";
                     DisposeThis();
                 });
             }

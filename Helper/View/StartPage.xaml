@@ -4,7 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Helper"
-      
+      xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="StartPage">
@@ -14,7 +14,15 @@
         <Frame Grid.Row="1" Content="{Binding CurrentPage}" NavigationUIVisibility="Hidden" Opacity="{Binding FrameOpacity}"  />
         
         <StackPanel Orientation="Horizontal" Height="60" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,75,0">
-            <Button Content="{StaticResource SearchIcon}" Command="{Binding GoToLibrary}" Style="{StaticResource BaseButton}" Margin="0,0,15,0"/>
+            <Button Command="{Binding GoToLibrary}" Style="{StaticResource BaseButton}" Margin="0,0,15,0">
+                <ContentControl  Height="50" Width="50" >
+                    <Viewbox Stretch="Uniform">
+                        <Grid>
+                            <MD:PackIcon Kind="Library" Foreground="White"/>
+                        </Grid>
+                    </Viewbox>
+                </ContentControl>
+            </Button>
             <Button Content="Main" Command="{Binding GoToMain}" Height="60" Style="{StaticResource BaseButton}" Width="60"/>
             <Button Content="{StaticResource DeceseionIcon}" Command="{Binding GoToDecisions}" Height="60" Style="{StaticResource BaseButton}" Margin="15,0,0,0"/>
         </StackPanel>

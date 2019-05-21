@@ -5,38 +5,227 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:controls="clr-namespace:WpfMath.Controls;assembly=WpfMath"
       xmlns:local="clr-namespace:Helper.View"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="Decisions">
+      mc:Ignorable="d"
+      Title="Decisions" d:DesignHeight="768"  d:DesignWidth="1349">
 
-    <Grid>
+    <Grid Background="{StaticResource MediumBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="27*"/>
-            <RowDefinition Height="350*"/>
-            <RowDefinition Height="27*"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="400*"/>
-            <ColumnDefinition Width="941*"/>
+            <ColumnDefinition Width="23*"/>
+            <ColumnDefinition Width="57*"/>
         </Grid.ColumnDefinitions>
 
-        <ListView  
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60*"/>
+                <RowDefinition Height="56*"/>
+                <RowDefinition Height="633*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Column="0" Grid.Row="0" Style="{StaticResource BaseText}" TextAlignment="Center" VerticalAlignment="Center" FontSize="48" FontStyle="Italic" FontWeight="Bold" TextDecorations="{x:Null}" Margin="0,0,0,4" Height="56" >Решения</TextBlock>
+            <Button Height="50" 
+                        Command="{Binding Sort}"
+                        Content="Дата создания"
+                        Style="{StaticResource BaseButton}" Margin="0,0,0,6" VerticalAlignment="Bottom" Grid.Row="1" FontSize="24" FontWeight="Bold"/>
+
+            <ListView SelectionMode="Extended" 
+                      HorizontalContentAlignment="Stretch"
+                      Background="Transparent"
+                      BorderThickness="0"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      ItemsSource="{Binding DecisionsView}" 
+                      IsSynchronizedWithCurrentItem="True" 
+                      SelectedItem="{Binding SelectedDecesion,Mode=TwoWay}" 
+                      Grid.Row="2">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Template"  Value="{StaticResource DecesionListItems}" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+
+            <StackPanel Background="{StaticResource DarkBrush}" Grid.Row="3" Orientation="Horizontal">
+                <TextBlock
+                            Foreground="Gray"
+                            Style="{StaticResource BaseText}"
+                            Text="{Binding Decisions.Count, StringFormat='Всего: {0}, '}" />
+                <TextBlock
+                            Foreground="Gray"
+                            Style="{StaticResource BaseText}"
+                            Text="{Binding DecisionsView.Count, StringFormat=Найдено: {0}}" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"  />
+                <RowDefinition Height="349*" />
+            </Grid.RowDefinitions>
+
+            <Grid Background="{StaticResource MediumBaseBrush}" Grid.Row="0" >
+
+                <StackPanel 
+                Margin="174,0,236,0"
+                HorizontalAlignment="Center"
+                Orientation="Horizontal">
+
+                    <Button Command="{Binding AddItem}" Style="{StaticResource BaseButton}" ToolTip="Добавить книгу">
+                        <ContentControl Height="50" Content="{StaticResource PlusIcon}" />
+                    </Button>
+
+                    <Button
+                        Margin="-2,0,0,0"
+                        Command="{Binding DeleteBook}"
+                        CommandParameter="{Binding SelectedBook}"
+                        ToolTip="Удалить книгу"
+                        Style="{StaticResource BaseButton}">
+                        <ContentControl Height="50" Content="{StaticResource TrashIcon}" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <Grid
+                Grid.Row="2"
+                Background="{StaticResource LightBrush}"
+                DataContext="{Binding SelectedDecesion}">
+
+                <ScrollViewer>
+                    <ScrollViewer.Style>
+                        <Style TargetType="ScrollViewer">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=DataContext}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ScrollViewer.Style>
+                    <StackPanel Name="root" Margin="10">
+                        <Grid Margin="0,30,0,0">
+                            <Border CornerRadius="5">
+                                <StackPanel HorizontalAlignment="Center">
+                                    
+                                    <UniformGrid Background="{StaticResource DarkBrush}" Columns="1" >
+                                        <TextBlock HorizontalAlignment="Center" Margin="10"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BaseText}"
+                                            Text="Функция: "/>
+                                    </UniformGrid>
+                                    
+                                    <UniformGrid Background="{StaticResource LightBrush}" Columns="1">
+                                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                                                <controls:FormulaControl Formula="f(x)= " VerticalAlignment="Center" Margin="0,0,10,0" />
+                                                <controls:FormulaControl Formula="{Binding Path=OriginalValue.LaTeXValue}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </ScrollViewer>
+                                    </UniformGrid>
+
+                                    <UniformGrid Background="{StaticResource LightBrush}" Columns="1">
+                                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="1">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10">
+                                                <TextBlock Text="Задана на промежутке " Style="{StaticResource BaseText}"/>
+                                                <controls:FormulaControl Formula="["/>
+                                                <controls:FormulaControl Formula="{Binding Path=LowerSegmentValue}" VerticalContentAlignment="Center"/>
+                                                <controls:FormulaControl Formula="," VerticalContentAlignment="Center"/>
+                                                <controls:FormulaControl Formula="{Binding Path=UpperSegmentValue}" VerticalContentAlignment="Center"/>
+                                                <controls:FormulaControl Formula="]" />
+                                            </StackPanel>
+                                        </ScrollViewer>
+                                    </UniformGrid>
+
+                                    <UniformGrid Background="{StaticResource DarkBrush}" Columns="1">
+                                        <TextBlock  Margin="10"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            Style="{StaticResource BaseText}"
+                                            Text="Коэффиценты: "/>
+                                    </UniformGrid>
+
+                                    <UniformGrid Background="{StaticResource LightBrush}" Columns="1">
+                                        <StackPanel Margin="20,0,0,0" HorizontalAlignment="Left">
+                                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="1">
+                                                <StackPanel Orientation="Horizontal"  >
+                                                    <controls:FormulaControl Formula="a_0 =" VerticalAlignment="Center" Margin="5,10,5,0"/>
+                                                    <controls:FormulaControl Formula="{Binding Path=Coefficient_a0.LaTeXValue}" VerticalAlignment="Center" Margin="5,10,5,0"/>
+                                                </StackPanel>
+                                            </ScrollViewer>
+
+                                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="1">
+                                                <StackPanel Orientation="Horizontal"  >
+                                                    <controls:FormulaControl Formula="a_n =" VerticalAlignment="Center" Margin="5,10,5,10"/>
+                                                    <controls:FormulaControl Formula="{Binding Path=Coefficient_an.LaTeXValue}" VerticalAlignment="Center" Margin="10"/>
+                                                </StackPanel>
+                                            </ScrollViewer>
+
+                                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="1">
+                                                <StackPanel Orientation="Horizontal"  >
+                                                    <controls:FormulaControl Formula="b_n =" VerticalAlignment="Center" Margin="5,0,5,10"/>
+                                                    <controls:FormulaControl Formula="{Binding Path=Coefficient_bn.LaTeXValue}" VerticalAlignment="Center" Margin="5,0,5,10"/>
+                                                </StackPanel>
+                                            </ScrollViewer>
+                                        </StackPanel>
+                                    </UniformGrid>
+
+                                    <UniformGrid Background="{StaticResource DarkBrush}" Columns="1">
+                                        <TextBlock  Margin="10"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            Style="{StaticResource BaseText}"
+                                            Text="Ряд Фурье: "/>
+                                    </UniformGrid>
+
+                                    <UniformGrid Background="{StaticResource LightBrush}" Columns="1">
+                                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="1">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                                                <controls:FormulaControl Formula="f(x) \sim " VerticalAlignment="Center" Margin="0,3,5,0"/>
+                                                <controls:FormulaControl Formula="{Binding Path=FourierSeries.LaTeXValue}" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </ScrollViewer>
+                                    </UniformGrid>
+
+                                    <TextBlock  Margin="10"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Style="{StaticResource BaseText}"
+                                        Text="Иследование ряда: "/>
+
+                                    <UniformGrid Background="{StaticResource LightBrush}" Columns="1">
+                                        <TextBlock  Margin="10"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            Style="{StaticResource BaseText}"
+                                            Text="Построить график суммы порядка k= "/>
+                                        <TextBox Style="{StaticResource BaseTextBox}" x:Name="Limit" Width="75"/>
+                                        <Button Width="75" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext.AddPlot}" CommandParameter="{Binding ElementName=Limit,Path=Text}"/>
+                                    </UniformGrid>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+    </Grid>
+
+    <!--<ListView  
             ItemsSource="{Binding Decisions}" 
             HorizontalContentAlignment="Stretch"
             IsSynchronizedWithCurrentItem="True" 
             BorderThickness="0"
             
-            SelectedItem="{Binding SelectedDecision}" 
+            SelectedItem="{Binding SelectedDecesion}" 
             Grid.Column="0" Grid.Row="1">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
-                    <Setter Property="Template"  Value="{StaticResource DecisionListItems}" />
+                    <Setter Property="Template"  Value="{StaticResource DecesionListItems}" />
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
 
         <Border BorderBrush="Aqua" BorderThickness="1" Margin="2" Grid.Column="1"  Grid.Row="1" >
-            <ContentControl Visibility="{Binding DecisionsIsEmpty,UpdateSourceTrigger=PropertyChanged}" Content="{Binding SelectedDecision}">
+            <ContentControl Visibility="{Binding DecisionsIsEmpty,UpdateSourceTrigger=PropertyChanged}" Content="{Binding SelectedDecesion}">
                 <ContentControl.ContentTemplate>
                     <DataTemplate>
                         <ScrollViewer>
@@ -83,5 +272,5 @@
 
         <Button Command="{Binding AddItem}">+</Button>
 
-    </Grid>
+    </Grid>-->
 </Page>
