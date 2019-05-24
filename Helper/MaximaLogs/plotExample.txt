@@ -1,4 +1,4 @@
 k:{k}$
 f(x):={fx}$
 g(x):={gx}$
-plot2d([f(x), g(x)], [x,{a},{b}],  [axes, solid],   [xlabel,"x"],[ylabel,"y"],[legend,"S_{{k}}","f(x)"],[box,false],  [gnuplot_preamble,"set key box spacing 1.3 top right"])$
+plot2d([f(x), g(x)], [x,{a},{b}],  [axes, solid],   [xlabel,"x"],[ylabel,"y"],[legend,"f(x)","S_{{k}}"],[box,false],  [gnuplot_preamble,"set key box spacing 1.3 top right"])$

@@ -31,31 +31,7 @@
         public DbSet<FourierSeries> FourierSeriess { get; set; }
         public DbSet<PartialSum_k> PartialSum_k { get; set; }
 
-        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<Book>()
-        //        .HasMany(b=>b.Authors)
-        //        .WithMany(a=>a.Books)
-        //        .Map(m=>
-        //        {
-        //            m.ToTable("BookAuthors");
-
-        //            m.MapLeftKey("BookID");
-        //            m.MapRightKey("AuthorID");
-        //        });
-
-        //    modelBuilder.Entity<Book>()
-        //        .HasMany(b => b.KeyWords)
-        //        .WithMany(a => a.Books)
-        //        .Map(m =>
-        //        {
-        //            m.ToTable("BookKeyWords");
-
-        //            m.MapLeftKey("BookID");
-        //            m.MapRightKey("KeyWordItemID");
-        //        });
-        //}
-        //public virtual DbSet<MyEntity> MyEntities { get; set; }
+        
     }
 
     //public class MyEntity

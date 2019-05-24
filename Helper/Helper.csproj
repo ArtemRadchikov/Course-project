@@ -85,7 +85,6 @@
     <Compile Include="Model\Author.cs" />
     <Compile Include="Model\Book.cs" />
     <Compile Include="Model\DB\HelperContext.cs" />
-    <Compile Include="Model\DB\Maping\DecisionMap.cs" />
     <Compile Include="Model\IDataErrorInfo.cs" />
     <Compile Include="Model\KeyWordItem.cs" />
     <Compile Include="Model\Paths.cs" />
@@ -222,9 +221,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="System.Windows.Controls.Input.Toolkit.dll" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

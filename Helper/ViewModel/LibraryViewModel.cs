@@ -96,7 +96,10 @@ namespace Helper.ViewModel
                     using (HelperContext helperContext = new HelperContext())
                     {
                         Book bookToRemove = helperContext.Books.Include(b=>b.Authors).Include(b=>b.KeyWords).FirstOrDefault(b => b.BookID == book.BookID);
-                        helperContext.Books.Remove(helperContext.Books.FirstOrDefault(b => b.BookID == book.BookID));
+                        helperContext.Authors.RemoveRange(bookToRemove.Authors);
+                        helperContext.KeyWordItems.RemoveRange(bookToRemove.KeyWords);
+
+                        helperContext.Books.Remove(bookToRemove);
                         helperContext.SaveChanges();
                         Books.Remove(book);
                         SelectedBook = null;

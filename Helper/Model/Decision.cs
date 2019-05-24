@@ -159,7 +159,7 @@ namespace Helper.Model
     {
         [Key]
         public int DecisionID { get; set; }
-        public OriginalValue(string tex, string latex) : base(tex, latex) { }
+        public OriginalValue(SymbolicExpretion symbolicExpretion) : base(symbolicExpretion.SymbolicValue.Replace(@"\pi", @"%pi"), symbolicExpretion.LaTeXValue) { }
         public OriginalValue() { }
     }
 
@@ -168,7 +168,7 @@ namespace Helper.Model
         [Key]
         public int DecisionID { get; set; }
         public Coefficient_a0() { }
-        public Coefficient_a0(string tex, string latex) : base(tex, latex) { }
+        public Coefficient_a0(SymbolicExpretion symbolicExpretion) : base(symbolicExpretion.SymbolicValue.Replace(@"\pi", @"%pi"), symbolicExpretion.LaTeXValue) { }
     }
 
     public class Coefficient_an : SymbolicExpretion
@@ -176,7 +176,7 @@ namespace Helper.Model
         [Key]
         public int DecisionID { get; set; }
         public Coefficient_an() { }
-        public Coefficient_an(string tex, string latex) : base(tex, latex) { }
+        public Coefficient_an(SymbolicExpretion symbolicExpretion) : base(symbolicExpretion.SymbolicValue.Replace(@"\pi", @"%pi"), symbolicExpretion.LaTeXValue) { }
     }
 
     public class Coefficient_bn : SymbolicExpretion
@@ -184,7 +184,7 @@ namespace Helper.Model
         [Key]
         public int DecisionID { get; set; }
         public Coefficient_bn() { }
-        public Coefficient_bn(string tex, string latex) : base(tex, latex) { }
+        public Coefficient_bn(SymbolicExpretion symbolicExpretion) : base(symbolicExpretion.SymbolicValue.Replace(@"\pi", @"%pi"), symbolicExpretion.LaTeXValue) { }
     }
 
     public class FourierSeries : SymbolicExpretion
@@ -192,7 +192,7 @@ namespace Helper.Model
         [Key]
         public int DecisionID { get; set; }
         public FourierSeries() { }
-        public FourierSeries(string tex, string latex) : base(tex, latex) { }
+        public FourierSeries(string SymbolicValue, string LaTeXValue) : base(SymbolicValue.Replace(@"\pi", @"%pi"), LaTeXValue) { }
     }
 
     public class PartialSum_k : SymbolicExpretion
@@ -200,6 +200,6 @@ namespace Helper.Model
         [Key]
         public int DecisionID { get; set; }
         public PartialSum_k() { }
-        public PartialSum_k(string tex, string latex) : base(tex, latex) { }
+        public PartialSum_k(SymbolicExpretion symbolicExpretion) : base(symbolicExpretion.SymbolicValue.Replace(@"\pi", @"%pi"), symbolicExpretion.LaTeXValue) { }
     }
 }

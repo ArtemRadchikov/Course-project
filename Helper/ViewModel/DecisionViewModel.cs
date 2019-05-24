@@ -35,12 +35,12 @@ namespace Helper.ViewModel
 
         public DecisionViewModel()
         {
-            OriginalValue fx = new OriginalValue("x^2+2", @"{\frac{2 \left(\pi^3+6 \pi\right)}{3 \pi}}");
-            Coefficient_a0 a0 = new Coefficient_a0("(2*(%pi ^ 3 + 6 *% pi)) / (3 *% pi)", @"{\frac{2 \left(\pi^3+6 \pi\right)}{3 \pi}}");
-            Coefficient_an an = new Coefficient_an("(4 * (-1) ^ n) / n ^ 2", @"{\frac{4 \left(-1\right)^{n}}{n^2}}");
-            Coefficient_bn bn = new Coefficient_bn("0", "0");
+            OriginalValue fx = new OriginalValue(new SymbolicExpretion("x^2+2", @"{\frac{2 \left(\pi^3+6 \pi\right)}{3 \pi}}"));
+            Coefficient_a0 a0 = new Coefficient_a0(new SymbolicExpretion("(2*(%pi ^ 3 + 6 *% pi)) / (3 *% pi)", @"{\frac{2 \left(\pi^3+6 \pi\right)}{3 \pi}}"));
+            Coefficient_an an = new Coefficient_an(new SymbolicExpretion("(4 * (-1) ^ n) / n ^ 2", @"{\frac{4 \left(-1\right)^{n}}{n^2}}"));
+            Coefficient_bn bn = new Coefficient_bn(new SymbolicExpretion("0", "0"));
             FourierSeries fs = new FourierSeries("25-(6*'sum(((-1)^n*sin((%pi*n*x)/3))/n,n,1,k))/%pi", @"4 \sum_{n=1}^{k}{{\frac{\left(-1\right)^{n} \cos \left(n x\right) }{n^2}}}+{\frac{\pi^3+6 \pi}{3 \pi}}");
-            PartialSum_k ps_k = new PartialSum_k("25-(6*'sum(((-1)^n*sin((%pi*n*x)/3))/n,n,1,k))/%pi", @"4 \sum_{n=1}^{k}{{\frac{\left(-1\right)^{n} \cos \left(n x\right) }{n^2}}}+{\frac{\pi^3+6 \pi}{3 \pi}}");
+            PartialSum_k ps_k = new PartialSum_k(new SymbolicExpretion("25-(6*'sum(((-1)^n*sin((%pi*n*x)/3))/n,n,1,k))/%pi", @"4 \sum_{n=1}^{k}{{\frac{\left(-1\right)^{n} \cos \left(n x\right) }{n^2}}}+{\frac{\pi^3+6 \pi}{3 \pi}}"));
             Decision decesion = new Decision("x^2+2", fx, @"-\pi", @"\pi", @"\pi", a0, an, bn, fs,ps_k, DateTime.Now);
             Decisions = new ObservableCollection<Decision>();
             Decisions.Add(decesion);
@@ -102,12 +102,12 @@ namespace Helper.ViewModel
                         }
 
                         #region Get values and create object
-                        OriginalValue OriginalValue = CreateSymbolicExpretion(Paths.PathToNewDecisionFunctionValues) as OriginalValue;
-                        Coefficient_a0 Coefficient_a0 = CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_a0) as Coefficient_a0;
-                        Coefficient_an Coefficient_an = CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_an) as Coefficient_an;
-                        Coefficient_bn Coefficient_bn = CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_bn) as Coefficient_bn;
-                        PartialSum_k PartialSum_k = CreateSymbolicExpretion(Paths.PathToNewDecisionFourierSeriesValues) as PartialSum_k;
-                        FourierSeries FourierSeries = new FourierSeries(PartialSum_k.LaTeXValue.Replace("k", @"+\infty"), PartialSum_k.SymbolicValue.Replace("k", @"+\infty"));
+                        OriginalValue OriginalValue = new OriginalValue(CreateSymbolicExpretion(Paths.PathToNewDecisionFunctionValues));
+                        Coefficient_a0 Coefficient_a0 =new Coefficient_a0( CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_a0));
+                        Coefficient_an Coefficient_an = new Coefficient_an( CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_an));
+                        Coefficient_bn Coefficient_bn = new Coefficient_bn(CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_bn));
+                        PartialSum_k PartialSum_k = new PartialSum_k(CreateSymbolicExpretion(Paths.PathToNewDecisionFourierSeriesValues));
+                        FourierSeries FourierSeries = new FourierSeries(PartialSum_k.SymbolicValue.Replace("k", @"+\infty"), PartialSum_k.LaTeXValue.Replace("k", @"+\infty"));
 
 
                         DateTime СreationTime = DateTime.Now;
@@ -137,7 +137,7 @@ namespace Helper.ViewModel
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBox.Show(ex.Message+"\n"+ex.Source);
                     }
                 });
             }
@@ -222,7 +222,7 @@ namespace Helper.ViewModel
             string resstr = str;
             resstr = resstr.Replace("\n", "");
             resstr = resstr.Replace("\"", "");
-            resstr = resstr.Replace(@"\pi", @"%pi");
+            resstr = resstr.Replace(@"%pi", @"\pi");
             resstr = resstr.Replace("$", "");
             resstr = resstr.Replace(@"\\,", " ");
             resstr = resstr.Replace(@"\\", @"\");

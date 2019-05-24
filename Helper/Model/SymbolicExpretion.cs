@@ -50,5 +50,6 @@ namespace Helper.Model
             return new SymbolicExpretion(this.SymbolicValue, this.LaTeXValue);
         }
 
+        
     }
 }
