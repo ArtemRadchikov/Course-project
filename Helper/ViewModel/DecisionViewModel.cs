@@ -35,12 +35,13 @@ namespace Helper.ViewModel
 
         public DecisionViewModel()
         {
-            SymbolicExpretion fx = new SymbolicExpretion("x^2+2", @"{\frac{2 \left(\pi^3+6 \pi\right)}{3 \pi}}");
-            SymbolicExpretion a0 = new SymbolicExpretion("(2*(%pi ^ 3 + 6 *% pi)) / (3 *% pi)", @"{\frac{2 \left(\pi^3+6 \pi\right)}{3 \pi}}");
-            SymbolicExpretion an = new SymbolicExpretion("(4 * (-1) ^ n) / n ^ 2", @"{\frac{4 \left(-1\right)^{n}}{n^2}}");
-            SymbolicExpretion bn = new SymbolicExpretion("0", "0");
-            SymbolicExpretion fs = new SymbolicExpretion("25-(6*'sum(((-1)^n*sin((%pi*n*x)/3))/n,n,1,k))/%pi", @"4 \sum_{n=1}^{k}{{\frac{\left(-1\right)^{n} \cos \left(n x\right) }{n^2}}}+{\frac{\pi^3+6 \pi}{3 \pi}}");
-            Decision decesion = new Decision(fx, @"-\pi", @"\pi", @"\pi", a0, an, bn, fs, DateTime.Now);
+            OriginalValue fx = new OriginalValue("x^2+2", @"{\frac{2 \left(\pi^3+6 \pi\right)}{3 \pi}}");
+            Coefficient_a0 a0 = new Coefficient_a0("(2*(%pi ^ 3 + 6 *% pi)) / (3 *% pi)", @"{\frac{2 \left(\pi^3+6 \pi\right)}{3 \pi}}");
+            Coefficient_an an = new Coefficient_an("(4 * (-1) ^ n) / n ^ 2", @"{\frac{4 \left(-1\right)^{n}}{n^2}}");
+            Coefficient_bn bn = new Coefficient_bn("0", "0");
+            FourierSeries fs = new FourierSeries("25-(6*'sum(((-1)^n*sin((%pi*n*x)/3))/n,n,1,k))/%pi", @"4 \sum_{n=1}^{k}{{\frac{\left(-1\right)^{n} \cos \left(n x\right) }{n^2}}}+{\frac{\pi^3+6 \pi}{3 \pi}}");
+            PartialSum_k ps_k = new PartialSum_k("25-(6*'sum(((-1)^n*sin((%pi*n*x)/3))/n,n,1,k))/%pi", @"4 \sum_{n=1}^{k}{{\frac{\left(-1\right)^{n} \cos \left(n x\right) }{n^2}}}+{\frac{\pi^3+6 \pi}{3 \pi}}");
+            Decision decesion = new Decision("x^2+2", fx, @"-\pi", @"\pi", @"\pi", a0, an, bn, fs,ps_k, DateTime.Now);
             Decisions = new ObservableCollection<Decision>();
             Decisions.Add(decesion);
             Thread.Sleep(5000);
@@ -100,14 +101,15 @@ namespace Helper.ViewModel
                             loading.ShowDialog();
                         }
 
-                        SelectedDecesion = Decisions.FirstOrDefault();
-
                         #region Get values and create object
-                        SymbolicExpretion OriginalValue = CreateSymbolicExpretion(Paths.PathToNewDecisionFunctionValues);
-                        SymbolicExpretion Coefficient_a0 = CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_a0);
-                        SymbolicExpretion Coefficient_an = CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_an);
-                        SymbolicExpretion Coefficient_bn = CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_bn);
-                        SymbolicExpretion FourierSeries = CreateSymbolicExpretion(Paths.PathToNewDecisionFourierSeriesValues);
+                        OriginalValue OriginalValue = CreateSymbolicExpretion(Paths.PathToNewDecisionFunctionValues) as OriginalValue;
+                        Coefficient_a0 Coefficient_a0 = CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_a0) as Coefficient_a0;
+                        Coefficient_an Coefficient_an = CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_an) as Coefficient_an;
+                        Coefficient_bn Coefficient_bn = CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_bn) as Coefficient_bn;
+                        PartialSum_k PartialSum_k = CreateSymbolicExpretion(Paths.PathToNewDecisionFourierSeriesValues) as PartialSum_k;
+                        FourierSeries FourierSeries = new FourierSeries(PartialSum_k.LaTeXValue.Replace("k", @"+\infty"), PartialSum_k.SymbolicValue.Replace("k", @"+\infty"));
+
+
                         DateTime СreationTime = DateTime.Now;
 
                         string[] values;
@@ -121,7 +123,13 @@ namespace Helper.ViewModel
                         string UpperSegmentValue = MaximaTeXParser(values[1]);
                         string HalfPeriod = MaximaTeXParser(values[2]);
 
-                        Decision Decesion = new Decision(OriginalValue, LowerSegmentValue, UpperSegmentValue, HalfPeriod, Coefficient_a0, Coefficient_an, Coefficient_bn, FourierSeries, СreationTime);
+                        string inputedValue;
+                        using (StreamReader sw = new StreamReader(Paths.PathToNewDecision + "inputedValue.txt"))
+                        {
+                            inputedValue = sw.ReadLine();
+                        }
+
+                        Decision Decesion = new Decision(inputedValue,OriginalValue, LowerSegmentValue, UpperSegmentValue, HalfPeriod, Coefficient_a0, Coefficient_an, Coefficient_bn, FourierSeries, PartialSum_k, СreationTime);
 
                         Decisions.Add(Decesion);
                         #endregion
@@ -165,10 +173,10 @@ namespace Helper.ViewModel
 
                         int k = Convert.ToInt32(ks);
                         Text = Text.Replace("{fx}", SelectedDecesion.OriginalValue.SymbolicValue);
-                        Text = Text.Replace("{gx}", SelectedDecesion.FourierSeries.SymbolicValue);
+                        Text = Text.Replace("{gx}", SelectedDecesion.PartialSum_k.SymbolicValue);
                         Text = Text.Replace("{k}", k.ToString());
-                        Text = Text.Replace("{a}", SelectedDecesion.LowerSegmentValue);
-                        Text = Text.Replace("{b}", SelectedDecesion.UpperSegmentValue);
+                    Text = Text.Replace("{a}", SelectedDecesion.LowerSegmentValue.Replace(@"\","%"));
+                        Text = Text.Replace("{b}", SelectedDecesion.UpperSegmentValue.Replace(@"\", "%"));
 
                         using (StreamWriter sw = new StreamWriter(Paths.PathToMaximaLogs + "/plot.txt", false))
                         {
@@ -214,6 +222,7 @@ namespace Helper.ViewModel
             string resstr = str;
             resstr = resstr.Replace("\n", "");
             resstr = resstr.Replace("\"", "");
+            resstr = resstr.Replace(@"\pi", @"%pi");
             resstr = resstr.Replace("$", "");
             resstr = resstr.Replace(@"\\,", " ");
             resstr = resstr.Replace(@"\\", @"\");

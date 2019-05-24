@@ -99,9 +99,7 @@ namespace Helper.ViewModel
                             }
                         }
                         break;
-                    default:
-                        throw new ArgumentException(
-                        "Unrecognized property: " + columnName);
+                    
                 }
 
                 return msg;
@@ -121,7 +119,6 @@ namespace Helper.ViewModel
             }
         }
 
-
         public string Url
         {
             get => SelectedBook.Url;
@@ -131,7 +128,6 @@ namespace Helper.ViewModel
                 OnPropertyChanged("Url");
             }
         }
-
 
         public string Publisher {
             get
@@ -144,8 +140,6 @@ namespace Helper.ViewModel
                 OnPropertyChanged("Publisher");
             }
         }
-        
-        
 
         public string newAuthor;
         public string NewAuthor
@@ -311,7 +305,40 @@ namespace Helper.ViewModel
             {
                 return new DelegateCommand(() => 
                 {
+                    using (HelperContext helperContext = new HelperContext())
+                    {
+                        using (var transaction = helperContext.Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                if (SelectedBook.BookID != 0)
+                                {
+                                    helperContext.Books.Remove(helperContext.Books.FirstOrDefault(b=>b.BookID==SelectedBook.BookID));
+                                    helperContext.SaveChanges();
+                                }
+
+
+                                if (!helperContext.Books.Any(b => b.Name.Replace("\n", "").Equals(SelectedBook.Name) && b.Publisher.Replace("\n", "").Equals(SelectedBook.Publisher) && b.PublishDate.Equals(SelectedBook.PublishDate)))
+                                {
+                                    helperContext.Books.Add(SelectedBook);
+                                    helperContext.SaveChanges();
+                                }
+                                else
+                                    transaction.Rollback();
+
+                                transaction.Commit();
+                                
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.Message);
+                                transaction.Rollback();
+                            }
+                        }
+                    }
+
                     DisposeThis();
+
                 },()=>Validate(SelectedBook));
             }
         }

@@ -59,14 +59,19 @@ namespace Helper.ViewModel
                             Text = sr.ReadToEnd();
                         }
 
-                        Text = Text.Replace("{fx}", originalValue);
+                        Text = Text.Replace("{fx}", CorrectPi(originalValue));
                         Text = Text.Replace("{path}", Paths.PathToNewDecision);
-                        Text = Text.Replace("{a}", LowerSegmentValue);
-                        Text = Text.Replace("{b}", UpperSegmentValue);
+                        Text = Text.Replace("{a}", CorrectPi(LowerSegmentValue));
+                        Text = Text.Replace("{b}", CorrectPi(UpperSegmentValue));
 
                         using (StreamWriter sw = new StreamWriter(Paths.PathToBatchCalculateNewDecision, false))
                         {
                             sw.Write(Text);
+                        }
+
+                        using (StreamWriter sw = new StreamWriter(Paths.PathToNewDecision + "inputedValue.txt", false))
+                        {
+                            sw.WriteLine(CorrectPi(originalValue));
                         }
 
                         foreach (System.Windows.Window window in System.Windows.Application.Current.Windows)
@@ -77,8 +82,13 @@ namespace Helper.ViewModel
                             }
                         }
                     }
-                 );
+                );
             }
+        }
+        string CorrectPi(string input)
+        {
+            string output = input.Replace(@"\pi", @"%pi");
+            return output;
         }
     }
 }

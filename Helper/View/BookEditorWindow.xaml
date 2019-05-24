@@ -107,7 +107,7 @@
                                     <StackPanel Orientation="Horizontal">
                                         <TextBox x:Name="KeyWord" Margin="10,10,5,10"
                                             Tag="ключевое слово.."
-                                            MaxLength="60"
+                                            MaxLength="200"
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BaseTextBox}"
                                             Text="{Binding NewKeyWord,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}"

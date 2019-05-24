@@ -14,6 +14,7 @@ using System.Windows;
 using Helper.View;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Data.Entity;
 
 namespace Helper.ViewModel
 {
@@ -22,7 +23,8 @@ namespace Helper.ViewModel
         public ObservableCollection<Book> Books { get; set; }
         public ICollectionView BooksView { get; set; }
         Book selectedBook;
-                
+        HelperContext HelperContext = new HelperContext();        
+
         public Book SelectedBook {
             get => selectedBook; 
             set
@@ -91,12 +93,19 @@ namespace Helper.ViewModel
             {
                 return new DelegateCommand<Book>((book) =>
                 {
-                    Books.Remove(book);
-                    SelectedBook = Books.FirstOrDefault();
+                    using (HelperContext helperContext = new HelperContext())
+                    {
+                        Book bookToRemove = helperContext.Books.Include(b=>b.Authors).Include(b=>b.KeyWords).FirstOrDefault(b => b.BookID == book.BookID);
+                        helperContext.Books.Remove(helperContext.Books.FirstOrDefault(b => b.BookID == book.BookID));
+                        helperContext.SaveChanges();
+                        Books.Remove(book);
+                        SelectedBook = null;
+                    }
 
                 }, (book) => book != null);
             }
         }
+
         public ICommand AddItem
         {
             get
@@ -115,9 +124,12 @@ namespace Helper.ViewModel
                         w.DataContext = bm;
                         w.ShowDialog();
 
-                        if (book.Name!= "null")
+                        if (book.Name != "null")
+                        {
                             Books.Add(book);
+                        }
                         BooksView.Refresh();
+                        
                     }
                     catch (Exception ex)
                     {
@@ -131,7 +143,6 @@ namespace Helper.ViewModel
         {
             get
             {
-                
                 return new DelegateCommand<Book>((book) =>
                 {
                     try
@@ -164,54 +175,13 @@ namespace Helper.ViewModel
         public LibraryViewModel()
         {
             Books = new ObservableCollection<Book>();
-
-            Book book1 = new Book()
+            using (HelperContext helperContext = new HelperContext())
             {
-                Name = "Высшая математика",
-                Authors = new ObservableCollection<Author>()
-                    {
-                        new Author(){ FirstName="Жанна",MidleName="Николаевна",SecondName="Горбатович" },
-                        new Author(){ FirstName="Александра",MidleName="Сергеевна",SecondName="Семенкова" },
-                        new Author(){ FirstName="Елена",MidleName="Алексеевна",SecondName="Шинкевич" }
-
-                },
-                KeyWords = new ObservableCollection<KeyWordItem>()
-                    {
-                        new KeyWordItem("высшая математика"),
-                        new KeyWordItem("функции нескольких переменных"),
-                        new KeyWordItem("интегралы")
-                    },
-                PublishDate= 2007,
-                Publisher="БГТУ",
-                BibliographicDescription= "Высшая математика : учебно-методическое пособие для студентов заочного факультета : в 4 ч. Ч. 3 / [сост.: Ж. Н. Горбатович, А. С. Семенкова, Е. А. Шинкевич] . - Минск : БГТУ , 2007 . - 56 с.",
-                Description= "Приведены основные теоретические сведения по изучаемому курсу, примеры решения задач, задачи для самостоятельного решеия по темам \"Функции нескольких переменных\" \"Двойной интеграл\", \"Тройной интеграл\", \"Криволинейные интегралы\"",
-                Url= @"https://elib.belstu.by/bitstream/123456789/2998/1/vysshaya-matematika.-ch.3_gorbatovich.pdf"
-            };
-
-            Book book2 = new Book()
-            {
-                Name = "Линейные связности на трехмерных симметрических пространствах",
-                Authors = new ObservableCollection<Author>()
-                    {
-                        new Author(){ FirstName="Наталья",MidleName="Павловна",SecondName="Можей" },
-                    },
-                KeyWords = new ObservableCollection<KeyWordItem>()
-                    {
-                        new KeyWordItem("высшая математика"),
-                        new KeyWordItem("линейные связности"),
-                        new KeyWordItem("трехмерные пространства")
-                    },
-                PublishDate = 2015,
-                Publisher = "БГТУ",
-                BibliographicDescription = "Можей, Н. П. Линейные связности на трехмерных симметрических пространствах / Н. П. Можей // Автоматический контроль и автоматизация производственных процессов : материалы Международной научно-технической конференции, 22-24 октября 2015 г. / Белорусский государственный технологический университет ; [редкол.: И. М. Жарский (гл. ред.)]. - Минск : БГТУ, 2015. - С. 185-188.",
-                Description = "DescriptionDescriptionDescriptionDescriptionDescription",
-                Url = @"https://elib.belstu.by/bitstream/123456789/14752/1/s.-185-188.pdf"
-            };
-
-            Books.Add(book2);
-            Books.Add(book1);
-
-
+                foreach(Book b in helperContext.Books.Include(b=>b.Authors).Include(b => b.KeyWords).ToList())
+                {
+                    Books.Add(b);
+                }
+            }
             BindingOperations.EnableCollectionSynchronization(Books, new object());
             BooksView = CollectionViewSource.GetDefaultView(Books);
         }
@@ -255,7 +225,6 @@ namespace Helper.ViewModel
             }
         }
 
-        
         public ICommand GoToUrl
         {
             get

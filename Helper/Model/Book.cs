@@ -6,37 +6,35 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Helper.Model
 {
     [BookValidationAttribute]
-    class Book : BaseVM, ICloneable
+    public class Book : BaseVM, ICloneable
     {
-        [Required]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int BookID { get; set; }
+        [MaxLength(200)]
         public string Name { get; set; }
         [Required]
         public ObservableCollection<Author> Authors { get; set; } = new ObservableCollection<Author>();
         [Required]
-        ObservableCollection<KeyWordItem> keyWords = new ObservableCollection<KeyWordItem>();
-        public ObservableCollection<KeyWordItem> KeyWords
-        {
-            get => keyWords;
-            set
-            {
-                keyWords = value;
-                OnPropertyChanged("KeyWords");
-            }
-        }
+        public ObservableCollection<KeyWordItem> KeyWords { get; set; } = new ObservableCollection<KeyWordItem>();
         [Required]
+        [Range(1950,2019)]
         public int PublishDate { get; set; }
         [Required]
         public string Publisher { get; set; }
+        [MaxLength(255)]
         public string BibliographicDescription { get; set; }
         [Required]
+        [MaxLength(255)]
         public string Description { get; set; }
         [Required]
         public string Url { get; set; }
 
+        public List<User> Users { get; set; }
         public object Clone()
         {
             ObservableCollection<KeyWordItem> keyWords = new ObservableCollection<KeyWordItem>();
@@ -53,6 +51,7 @@ namespace Helper.Model
 
             return new Book()
             {
+                BookID=this.BookID,
                 KeyWords = keyWords,
                 Authors = authors,
                 Name = this.Name,

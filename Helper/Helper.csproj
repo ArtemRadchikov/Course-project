@@ -41,6 +41,12 @@
     <Reference Include="DevExpress.Mvvm.v16.2, Version=16.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <HintPath>..\packages\DevExpress.Mvvm.v16.2.1.2.0\lib\net461\DevExpress.Mvvm.v16.2.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="MaterialDesignColors, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.1.1.2\lib\net45\MaterialDesignColors.dll</HintPath>
     </Reference>
@@ -53,6 +59,8 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -76,9 +84,12 @@
     </ApplicationDefinition>
     <Compile Include="Model\Author.cs" />
     <Compile Include="Model\Book.cs" />
+    <Compile Include="Model\DB\HelperContext.cs" />
+    <Compile Include="Model\DB\Maping\DecisionMap.cs" />
     <Compile Include="Model\IDataErrorInfo.cs" />
     <Compile Include="Model\KeyWordItem.cs" />
     <Compile Include="Model\Paths.cs" />
+    <Compile Include="Model\User.cs" />
     <Compile Include="ViewModel\AddDecisionViewModel.cs" />
     <Compile Include="ViewModel\BookEditorViewModel.cs" />
     <Compile Include="ViewModel\DecisionViewModel.cs" />
@@ -215,5 +226,6 @@
   <ItemGroup>
     <Content Include="System.Windows.Controls.Input.Toolkit.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
