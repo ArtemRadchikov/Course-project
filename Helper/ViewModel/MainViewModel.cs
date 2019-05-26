@@ -27,6 +27,7 @@ namespace Helper.ViewModel
                 return new DelegateCommand(() =>System.Windows.Application.Current.Shutdown());
             }
         }
+
         public Page CurrentPage
         {
             get { return currentPage; }
@@ -42,6 +43,9 @@ namespace Helper.ViewModel
             Start = new StartPage();
 
             CurrentPage = Start;
+
+            Entrance entrance = new Entrance() { DataContext = new EntranceViewModel() };
+            entrance.ShowDialog();
         }
 
         

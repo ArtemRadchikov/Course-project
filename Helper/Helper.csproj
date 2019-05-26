@@ -82,6 +82,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\AppUser.cs" />
     <Compile Include="Model\Author.cs" />
     <Compile Include="Model\Book.cs" />
     <Compile Include="Model\DB\HelperContext.cs" />
@@ -91,11 +92,24 @@
     <Compile Include="Model\User.cs" />
     <Compile Include="ViewModel\AddDecisionViewModel.cs" />
     <Compile Include="ViewModel\BookEditorViewModel.cs" />
+    <Compile Include="ViewModel\ComfirmEmailViewModel.cs" />
     <Compile Include="ViewModel\DecisionViewModel.cs" />
+    <Compile Include="ViewModel\EntranceViewModel.cs" />
     <Compile Include="ViewModel\LibraryViewModel.cs" />
+    <Compile Include="ViewModel\LoginViewModel.cs" />
+    <Compile Include="ViewModel\RegistrationViewModel.cs" />
+    <Compile Include="View\LoginWindow.xaml.cs">
+      <DependentUpon>LoginWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RegistrationWindow.xaml.cs">
+      <DependentUpon>RegistrationWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\StartPageViewModel.cs" />
     <Compile Include="View\BookEditorWindow.xaml.cs">
       <DependentUpon>BookEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Entrance.xaml.cs">
+      <DependentUpon>Entrance.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Loading.xaml.cs">
       <DependentUpon>Loading.xaml</DependentUpon>
@@ -138,6 +152,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\LoginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RegistrationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\AddDecision.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -147,6 +169,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\DecisionsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Entrance.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -210,6 +236,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

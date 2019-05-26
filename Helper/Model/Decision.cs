@@ -191,6 +191,15 @@ namespace Helper.Model
     {
         [Key]
         public int DecisionID { get; set; }
+
+        public Decision Decision
+        {
+            get => default(Decision);
+            set
+            {
+            }
+        }
+
         public FourierSeries() { }
         public FourierSeries(string SymbolicValue, string LaTeXValue) : base(SymbolicValue.Replace(@"\pi", @"%pi"), LaTeXValue) { }
     }

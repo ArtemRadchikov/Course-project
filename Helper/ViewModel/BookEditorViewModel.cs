@@ -54,7 +54,7 @@ namespace Helper.ViewModel
                                 if(string.IsNullOrEmpty(this.newAuthor))
                                     msg = "Список авторов не может быть пустым \n Учитывайте формат: Фамилия Имя Отчество";
                             else
-                                if (!string.IsNullOrEmpty(this.newAuthor) && (!isMatch(@"[А-Я][а-я]*\s[А-Я][а-я]*\s[А-Я][а-я]*", this.newAuthor) || !isMatch(@"[A-Z][A-z]*\s[A-Z][a-z]*\s[A-Z][a-z]*", this.newAuthor)))
+                                if (!string.IsNullOrEmpty(this.newAuthor) && (!isMatch(@"[А-Я][а-я]*\s[А-Я][а-я]*\s[А-Я][а-я]*", this.newAuthor) || !isMatch(@"[A-Z][a-z]*\s[A-Z][a-z]*\s[A-Z][a-z]*", this.newAuthor)))
                                 {
                                     msg = "Введеные данные не соответствуют формату: Фамилия Имя Отчество";
                                 }
@@ -95,7 +95,7 @@ namespace Helper.ViewModel
                                         msg = "допустимый диапазон [1950," + DateTime.Now.Year + "]";
                                 }
                                 else
-                                    msg = "Значение должно целочисленным";
+                                    msg = "Значение должно быть целочисленным";
                             }
                         }
                         break;

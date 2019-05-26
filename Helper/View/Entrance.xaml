@@ -1,0 +1,22 @@
+﻿<Window x:Class="Helper.View.Entrance"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Helper.View"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="Entrance" WindowStartupLocation="CenterScreen" Topmost="True"  ShowInTaskbar="False" Height="220" Width="400" WindowStyle="None" ResizeMode="NoResize">
+    <Grid>
+        <StackPanel>
+            <Border BorderBrush="{StaticResource DarkBrush}" Background="{StaticResource UltraLightBaseBrush}" BorderThickness="3" Margin="5">
+                <StackPanel>
+                    <Label Content="Войти в систему как:" FontSize="{StaticResource H1}" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <Button Content="Пользователь" Command="{Binding User}" Height="39" Style="{StaticResource BaseButton}" Margin="15,10,15,10"/>
+                    <Button Content="Гость" Command="{Binding Visitor}" Height="39" Style="{StaticResource BaseButton}" Margin="15,10,15,10"/>
+                </StackPanel>
+            </Border>
+            <Button Content="Выход" Command="{Binding Close}" HorizontalAlignment="Center" Width="75" Style="{StaticResource BaseButton}" Background="{StaticResource DarkBrush}"/>
+        </StackPanel>
+    </Grid>
+</Window>

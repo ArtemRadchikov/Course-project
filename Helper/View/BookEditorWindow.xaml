@@ -12,11 +12,11 @@
         WindowStartupLocation="CenterScreen"
         Title="BookEditorWindow">
 
-    
+
     <Grid
-                Grid.Row="2"
-                Background="{StaticResource LightBrush}">
-        
+        Grid.Row="2"
+        Background="{StaticResource LightBrush}">
+
         <ScrollViewer>
             <StackPanel Name="root" Margin="10">
                 <TextBox
@@ -170,24 +170,29 @@
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BaseText}"
                                             Text="Дата публикации: "/>
-                                <TextBox
+                                <StackPanel>
+                                    <TextBox
+                                    x:Name="Year"
                                             Tag="гггг"
                                             Margin="10"
                                             MaxLength="4"
                                             VerticalAlignment="Center"
                                             Text="{Binding PublishDate,Mode=TwoWay,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}"
                                             Style="{StaticResource BaseTextBox}"
-                                            TextWrapping="Wrap">
-                                    
-                                </TextBox>
-                            </UniformGrid>
+                                            TextWrapping="Wrap"/>
+
+                                    <Label Style="{StaticResource ErrorLable}" Content="{Binding ElementName=Year,Path=ToolTip}" FontSize="12"/>
+                                </StackPanel>
+                                </UniformGrid>
 
                             <UniformGrid Background="{StaticResource MediumBrush}" Columns="2">
                                 <TextBlock  Margin="10"
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BaseText}"
                                             Text="Издательство: "/>
+                                <StackPanel>
                                 <TextBox
+                                            x:Name="Publisher"
                                             Tag="название издательтва.."
                                             Margin="10"
                                             MaxLength="200"
@@ -196,6 +201,8 @@
                                             Text="{Binding Publisher,Mode=TwoWay,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}"
                                             TextWrapping="Wrap">
                                 </TextBox>
+                                    <Label Style="{StaticResource ErrorLable}" Content="{Binding ElementName=Publisher,Path=ToolTip}" FontSize="12"/>
+                                </StackPanel>
                             </UniformGrid>
 
                             <UniformGrid Background="{StaticResource DarkBrush}" Columns="2">
@@ -225,28 +232,32 @@
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BaseText}"
                                             Text="Описание:  "/>
-                                <ScrollViewer
-                                            MaxHeight="100"
-                                            HorizontalScrollBarVisibility="Disabled"
-                                            VerticalScrollBarVisibility="Auto">
-                                    <TextBox
-                                                Tag="максмум 255 символов"
-                                                MaxLength="255"
-                                                Margin="10"
-                                                VerticalAlignment="Center"
-                                                Style="{StaticResource BaseTextBox}"
-                                                Text="{Binding Description,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
-                                                TextWrapping="Wrap" />
-                                </ScrollViewer>
-                            </UniformGrid>
+                                <StackPanel>
+                                    <ScrollViewer
+                                                MaxHeight="100"
+                                                HorizontalScrollBarVisibility="Disabled"
+                                                VerticalScrollBarVisibility="Auto">
+                                        <TextBox
+                                            x:Name="Description"
+                                                    Tag="максмум 255 символов"
+                                                    MaxLength="255"
+                                                    Margin="10"
+                                                    VerticalAlignment="Center"
+                                                    Style="{StaticResource BaseTextBox}"
+                                                    Text="{Binding Description,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                                                    TextWrapping="Wrap" />
+                                    </ScrollViewer>
+                                    <Label Style="{StaticResource ErrorLable}" Content="{Binding ElementName=Description,Path=ToolTip}" FontSize="12"/>
+                            </StackPanel>
+                        </UniformGrid>
 
-                            <UniformGrid Background="{StaticResource DarkBrush}" Columns="2">
-                                <TextBlock
-                                            Margin="10"
-                                            VerticalAlignment="Center"
-                                            Style="{StaticResource BaseText}"
-                                            Text="Ссылка: " />
-
+                        <UniformGrid Background="{StaticResource DarkBrush}" Columns="2">
+                            <TextBlock
+                                    Margin="10"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource BaseText}"
+                                    Text="Ссылка: " />
+                            <StackPanel>
                                 <TextBox
                                             Tag="url на pdf файл"
                                             Margin="10"
@@ -258,8 +269,9 @@
                                             TextWrapping="Wrap">
                                     
                                 </TextBox>
-
-                            </UniformGrid >
+                                    <Label Style="{StaticResource ErrorLable}" Content="{Binding ElementName=Description,Path=ToolTip}" FontSize="12"/>
+                            </StackPanel>
+                        </UniformGrid >
                             <UniformGrid Columns="2" >
                                 <Button Background="{StaticResource DarkBrush}" Content="CANCEL" HorizontalAlignment="Left" Width="100" Command="{Binding Cancel}" Style="{StaticResource BaseButton}" Margin="20,25,25,20"/>
                                 <Button Content="OK" HorizontalAlignment="Right" Width="100" Style="{StaticResource BaseButton}" Command="{Binding Confirm}" Margin="20,25,25,20"/>

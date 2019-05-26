@@ -94,14 +94,14 @@
                 Orientation="Horizontal">
 
                     <Button Command="{Binding AddItem}" Style="{StaticResource BaseButton}" ToolTip="Добавить книгу">
-                        <ContentControl Height="50" Content="{StaticResource PlusIcon}" />
+                        <ContentControl Height="50" Content="{DynamicResource PlusIcon}" />
                     </Button>
 
                     <Button
                         Margin="-2,0,0,0"
                         Command="{Binding EditBook}"
                         CommandParameter="{Binding SelectedBook}"
-                        Style="{StaticResource BaseButton}"
+                        Style="{DynamicResource BaseButton}"
                         ToolTip="Изменить книгу">
                         <ContentControl Height="50" Content="{StaticResource PanIcon}" />
                     </Button>
@@ -112,7 +112,7 @@
                         CommandParameter="{Binding SelectedBook}"
                         ToolTip="Удалить книгу"
                         Style="{StaticResource BaseButton}">
-                        <ContentControl Height="50" Content="{StaticResource TrashIcon}" />
+                        <ContentControl Height="50" Content="{DynamicResource TrashIcon}" />
                     </Button>
                 </StackPanel>
             </Grid>
