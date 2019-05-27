@@ -82,6 +82,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Migrations\201905270653223_InitialCreate.cs" />
+    <Compile Include="Migrations\201905270653223_InitialCreate.Designer.cs">
+      <DependentUpon>201905270653223_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905270923190_Info.cs" />
+    <Compile Include="Migrations\201905270923190_Info.Designer.cs">
+      <DependentUpon>201905270923190_Info.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AppUser.cs" />
     <Compile Include="Model\Author.cs" />
     <Compile Include="Model\Book.cs" />
@@ -231,6 +240,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Migrations\201905270653223_InitialCreate.resx">
+      <DependentUpon>201905270653223_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905270923190_Info.resx">
+      <DependentUpon>201905270923190_Info.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

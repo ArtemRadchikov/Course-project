@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Helper.View"
         xmlns:controls="clr-namespace:WpfMath.Controls;assembly=WpfMath"
         mc:Ignorable="d"
-        Title="Adddecision" Height="350" Width="564" ResizeMode="NoResize" WindowStyle="None" >
+        Title="Adddecision" Height="350" Width="564" ResizeMode="NoResize" WindowStyle="None"  WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <Style TargetType="Button">
             <Style.Triggers>

@@ -1,0 +1,13 @@
+a:{a};
+b:{b};
+T: b-a;
+E:{E};
+x:{x};
+while x>=b do x: x-T;
+while x<=a do x: x+T;
+declare(n,integer);
+k:1;
+f(x):={fx};
+S(x,k):={sxk};
+while abs (f(x)-S(x,k) )>E do k:k+1;
+stringout("{path}K.txt",tex1(k));

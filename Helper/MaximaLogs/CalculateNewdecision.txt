@@ -1,7 +1,7 @@
-f(x):=15+x;
+f(x):=x^2;
 stringout("D:/Helper/Helper/MaximaLogs/newdecision/func.txt",f(x),tex(f(x),false));
-a:-3;
-b:3;
+a:1;
+b:10;
 l:(b-a)/2;
 stringout("D:/Helper/Helper/MaximaLogs/newdecision/SegmentValues.txt",a,b,l);
 declare(n,integer);

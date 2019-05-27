@@ -26,6 +26,7 @@ namespace Helper.Model
         public int PublishDate { get; set; }
         [Required]
         public string Publisher { get; set; }
+        [Required]
         [MaxLength(255)]
         public string BibliographicDescription { get; set; }
         [Required]
@@ -83,7 +84,7 @@ namespace Helper.Model
             if (book.PublishDate < 1950 || book.PublishDate > DateTime.Now.Year)
                 return false;
 
-            Regex regex = new Regex(@"[\w,/,-,_,.,:,\s\d]+[.][p][d][f]");
+            Regex regex = new Regex(@"[\w,/,-,_,.,:,\s,\d]+[.][p][d][f]");
             MatchCollection matches = regex.Matches(book.Url);
             if (matches.Count == 1)
                 if (matches[0].Value != book.Url)

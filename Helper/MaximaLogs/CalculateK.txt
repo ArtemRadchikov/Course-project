@@ -1,0 +1,13 @@
+a:-3;
+b:2;
+T: b-a;
+E:0.1;
+x:10;
+while x>=b do x: x-T;
+while x<=a do x: x+T;
+declare(n,integer);
+k:1;
+f(x):=x+4;
+S(x,k):=sum((2*((25*sin((6*%pi*n)/5)+10*%pi*n*cos((6*%pi*n)/5))/(4*%pi^2*n^2)+(25*sin((4*%pi*n)/5)-60*%pi*n*cos((4*%pi*n)/5))/(4*%pi^2*n^2))*sin((2*%pi*n*x)/5))/5+(2*((10*%pi*n*sin((6*%pi*n)/5)-25*cos((6*%pi*n)/5))/(4*%pi^2*n^2)+(60*%pi*n*sin((4*%pi*n)/5)+25*cos((4*%pi*n)/5))/(4*%pi^2*n^2))*cos((2*%pi*n*x)/5))/5,n,1,k)+7/2;
+while abs (f(x)-S(x,k) )>E do k:k+1;
+stringout("D:/Helper/Helper/MaximaLogs/K.txt",tex1(k));

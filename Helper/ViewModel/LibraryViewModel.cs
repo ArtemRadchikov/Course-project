@@ -179,9 +179,10 @@ namespace Helper.ViewModel
 
         public LibraryViewModel()
         {
-            if(AppUser.GetRoll().Replace("\n","").ToLower() != "admin")
+            if (AppUser.GetRoll().Replace("\n", "").ToLower() != "admin")
                 IsAdmin = null;
-
+            else
+                IsAdmin = "admin";
             Books = new ObservableCollection<Book>();
             using (HelperContext helperContext = new HelperContext())
             {

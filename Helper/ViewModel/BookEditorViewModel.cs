@@ -76,9 +76,9 @@ namespace Helper.ViewModel
                         {
                             if (string.IsNullOrEmpty(this.Url))
                                 msg = "Поле не может быть пустым";
-                            //else
-                            //    if (!isMatch(@"[\w,/,-,_,.,:,\s,\d]+[.][p][d][f]", this.Url))
-                            //        msg = "Pначение не соответствует формату ссылки, указывающей на pdf файл";
+                            else
+                                if (!isMatch(@"[\w,/,-,_,.,:,\s,\d]+[.][p][d][f]", this.Url))
+                                msg = "Pначение не соответствует формату ссылки, указывающей на pdf файл";
                         }
                         break;
                     case "PublishDate":

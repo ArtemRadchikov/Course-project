@@ -8,7 +8,7 @@
         xmlns:b="clr-namespace:ReactiveValidation.WPF.Behaviors;assembly=ReactiveValidation"
         mc:Ignorable="d"
         MinWidth="650"
-        MinHeight="500" ResizeMode="NoResize"
+        MinHeight="500" ResizeMode="NoResize" WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         Title="BookEditorWindow">
 

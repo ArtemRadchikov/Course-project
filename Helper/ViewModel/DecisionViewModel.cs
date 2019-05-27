@@ -165,22 +165,7 @@ namespace Helper.ViewModel
                             //helperContext.Decisions.Add(new Decision(inputedValue, OriginalValue, LowerSegmentValue, UpperSegmentValue, HalfPeriod, Coefficient_a0, Coefficient_an, Coefficient_bn, FourierSeries, PartialSum_k, СreationTime));
                             helperContext.SaveChanges();
                             helperContext.Dispose();
-                            //SelectedDecesion = Decisions.LastOrDefault();
-                            //helperContext.OriginalValues.Add(OriginalValue);
-                            //helperContext.SaveChanges();
-                            //helperContext.Coefficient_a0s.Add(Coefficient_a0);
-                            //helperContext.SaveChanges();
-                            //helperContext.Coefficient_ans.Add(Coefficient_an);
-                            //helperContext.SaveChanges();
-                            //helperContext.Coefficient_bns.Add(Coefficient_bn);
-                            //helperContext.SaveChanges();
-                            //helperContext.FourierSeriess.Add(FourierSeries);
-                            //helperContext.SaveChanges();
-                            //helperContext.PartialSum_ks.Add(PartialSum_k);
-                            //helperContext.SaveChanges();
-
-
-                           
+                                                       
                         }
                         
                         
@@ -194,6 +179,81 @@ namespace Helper.ViewModel
             }
         }
 
+        public ICommand CalculateKbyE
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    try
+                    {
+                        string Text;
+                        using (StreamReader sr = new StreamReader(Paths.PathToMaximaLogs+ "/CalculateExample.txt"))
+                        {
+                            Text = sr.ReadToEnd();
+                        }
+
+                        
+                        Text = Text.Replace("{E}", EForCalculation.ToString().Replace(",","."));
+                        Text = Text.Replace("{x}", XForCalculation.ToString());
+                        Text = Text.Replace("{fx}", SelectedDecesion.OriginalValue.SymbolicValue);
+                        Text = Text.Replace("{sxk}", SelectedDecesion.PartialSum_k.SymbolicValue);
+                        Text = Text.Replace("{a}", SelectedDecesion.LowerSegmentValue.Replace(@"\", "%"));
+                        Text = Text.Replace("{b}", SelectedDecesion.UpperSegmentValue.Replace(@"\", "%"));
+                        Text = Text.Replace("{path}", Paths.PathToMaximaLogs);
+                        //    Text = Text.Replace("{fx}", SelectedDecesion.OriginalValue.SymbolicValue);
+                        //    Text = Text.Replace("{gx}", SelectedDecesion.PartialSum_k.SymbolicValue);
+                        //    Text = Text.Replace("{k}", k.ToString());
+                        //Text = Text.Replace("{a}", SelectedDecesion.LowerSegmentValue.Replace(@"\","%"));
+                        //    Text = Text.Replace("{b}", SelectedDecesion.UpperSegmentValue.Replace(@"\", "%"));
+
+                        using (StreamWriter sw = new StreamWriter(Paths.PathToMaximaLogs + "/CalculateK.txt", false))
+                        {
+                            sw.Write(Text);
+                        }
+
+                        using (Loading loading = new Loading(() => StartCalculationProcces(Paths.PathToMaximaLogs + "/CalculateK.txt")))
+                        {
+                            loading.ShowDialog();
+                        }
+                        string k;
+                        using (StreamReader sr = new StreamReader(Paths.PathToMaximaLogs + "K.txt"))
+                            k = sr.ReadToEnd();
+                            MessageBox.Show(" Для достижения точности E= "+EForCalculation.ToString()+"\n Достаточно суммы "+ k.Replace("\"","").Replace(";","") +" порядка");
+                        //Paths.PathToBatchCalculateNewDecesion
+
+
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                });
+            }
+        }
+
+        public double xForCalculation;
+        public double XForCalculation
+        {
+            get =>xForCalculation;
+            set
+            {
+                xForCalculation = value;
+                OnPropertyChanged("XForCalculation");
+            }
+        }
+
+        public double eForCalculation;
+        public double EForCalculation
+        {
+            get => eForCalculation;
+            set
+            {
+                eForCalculation = value;
+                OnPropertyChanged("EForCalculation");
+            }
+        }
+
         public ICommand AddPlot
         {
             get
@@ -203,17 +263,19 @@ namespace Helper.ViewModel
                     try
                     {
                         string Text;
-                        using (StreamReader sr = new StreamReader(Paths.PathToMaximaLogs+ "/plotExample.txt"))
+                        using (StreamReader sr = new StreamReader(Paths.PathToMaximaLogs + "/plotExample.txt"))
                         {
                             Text = sr.ReadToEnd();
                         }
-
                         int k = Convert.ToInt32(ks);
+
                         Text = Text.Replace("{fx}", SelectedDecesion.OriginalValue.SymbolicValue);
                         Text = Text.Replace("{gx}", SelectedDecesion.PartialSum_k.SymbolicValue);
                         Text = Text.Replace("{k}", k.ToString());
-                    Text = Text.Replace("{a}", SelectedDecesion.LowerSegmentValue.Replace(@"\","%"));
+                        Text = Text.Replace("{a}", SelectedDecesion.LowerSegmentValue.Replace(@"\", "%"));
                         Text = Text.Replace("{b}", SelectedDecesion.UpperSegmentValue.Replace(@"\", "%"));
+                        Text = Text.Replace("{path}", Paths.PathToMaximaLogs);
+
 
                         using (StreamWriter sw = new StreamWriter(Paths.PathToMaximaLogs + "/plot.txt", false))
                         {
@@ -232,7 +294,7 @@ namespace Helper.ViewModel
                     {
                         MessageBox.Show(ex.Message);
                     }
-                });
+                }, (ks) => int.TryParse(ks.ToString(), out int ds));
             }
         }
 
