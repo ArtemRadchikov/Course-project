@@ -23,8 +23,8 @@
                     </Viewbox>
                 </ContentControl>
             </Button>
-            <Button Content="Main" Command="{Binding GoToMain}" Height="60" Style="{StaticResource BaseButton}" Width="60"/>
-            <Button Content="{StaticResource DeceseionIcon}" Command="{Binding GoToDecisions}" Height="60" Style="{StaticResource BaseButton}" Margin="15,0,0,0"/>
+            <Button Content="Main" Command="{Binding GoToMain}" Height="60" Style="{DynamicResource BaseButton}" Width="60"/>
+            <Button Content="{DynamicResource DeceseionIcon}" Command="{Binding GoToDecisions}" Height="60" Style="{StaticResource BaseButton}" Margin="15,0,0,0"/>
         </StackPanel>
     </Grid>
 </Page>

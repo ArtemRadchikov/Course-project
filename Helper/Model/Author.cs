@@ -25,6 +25,23 @@ namespace Helper.Model
         {
             get => SecondName + " , " + FirstName + " " + MidleName;
         }
+
+        public Book Book
+        {
+            get => default(Book);
+            set
+            {
+            }
+        }
+
+        public Book Book1
+        {
+            get => default(Book);
+            set
+            {
+            }
+        }
+
         public Author(string fn, string mn, string sn)
         {
             FirstName = fn;

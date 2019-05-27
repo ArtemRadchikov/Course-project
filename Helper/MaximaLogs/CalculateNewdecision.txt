@@ -1,4 +1,4 @@
-f(x):=x+5;
+f(x):=15+x;
 stringout("D:/Helper/Helper/MaximaLogs/newdecision/func.txt",f(x),tex(f(x),false));
 a:-3;
 b:3;

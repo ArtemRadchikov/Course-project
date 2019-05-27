@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Data.Entity;
+
 
 namespace Helper.ViewModel
 {
@@ -35,21 +37,22 @@ namespace Helper.ViewModel
 
         public DecisionViewModel()
         {
-            OriginalValue fx = new OriginalValue(new SymbolicExpretion("x^2+2", @"{\frac{2 \left(\pi^3+6 \pi\right)}{3 \pi}}"));
-            Coefficient_a0 a0 = new Coefficient_a0(new SymbolicExpretion("(2*(%pi ^ 3 + 6 *% pi)) / (3 *% pi)", @"{\frac{2 \left(\pi^3+6 \pi\right)}{3 \pi}}"));
-            Coefficient_an an = new Coefficient_an(new SymbolicExpretion("(4 * (-1) ^ n) / n ^ 2", @"{\frac{4 \left(-1\right)^{n}}{n^2}}"));
-            Coefficient_bn bn = new Coefficient_bn(new SymbolicExpretion("0", "0"));
-            FourierSeries fs = new FourierSeries("25-(6*'sum(((-1)^n*sin((%pi*n*x)/3))/n,n,1,k))/%pi", @"4 \sum_{n=1}^{k}{{\frac{\left(-1\right)^{n} \cos \left(n x\right) }{n^2}}}+{\frac{\pi^3+6 \pi}{3 \pi}}");
-            PartialSum_k ps_k = new PartialSum_k(new SymbolicExpretion("25-(6*'sum(((-1)^n*sin((%pi*n*x)/3))/n,n,1,k))/%pi", @"4 \sum_{n=1}^{k}{{\frac{\left(-1\right)^{n} \cos \left(n x\right) }{n^2}}}+{\frac{\pi^3+6 \pi}{3 \pi}}"));
-            Decision decesion = new Decision("x^2+2", fx, @"-\pi", @"\pi", @"\pi", a0, an, bn, fs,ps_k, DateTime.Now);
             Decisions = new ObservableCollection<Decision>();
-            Decisions.Add(decesion);
-            Thread.Sleep(5000);
-            Decisions.Add(decesion);
-            Thread.Sleep(5000);
-
-            Decisions.Add(decesion);
-            DecisionsView = CollectionViewSource.GetDefaultView(Decisions);
+            if (AppUser.GetRoll().Replace("\n","").ToLower()!="гость")
+                using (HelperContext helper = new HelperContext())
+                {
+                    foreach (Decision d in helper.Decisions.Include(d=>d.Coefficient_a0)
+                                                            .Include(d => d.Coefficient_an)
+                                                            .Include(d => d.Coefficient_bn)
+                                                            .Include(d => d.FourierSeries)
+                                                            .Include(d => d.PartialSum_k)
+                                                            .Include(d => d.OriginalValue).ToList())
+                    {
+                        
+                        Decisions.Add(d);
+                    }
+                }
+                    DecisionsView = CollectionViewSource.GetDefaultView(Decisions);
 
             //SelectedDecesion = Decisions.FirstOrDefault();
         }
@@ -71,7 +74,7 @@ namespace Helper.ViewModel
                 }, DecisionsView.SortDescriptions.Count != 0);
             }
         }
-        public ICommand DeleteDecesion
+        public ICommand DeleteDecision
         {
             get
             {
@@ -80,9 +83,10 @@ namespace Helper.ViewModel
                     Decisions.Remove(decesion);
                     SelectedDecesion = Decisions.FirstOrDefault();
 
-                }, (book) => book != null);
+                }, (decesion) => decesion != null);
             }
         }
+
         public DelegateCommand AddItem
         {
             get
@@ -96,65 +100,98 @@ namespace Helper.ViewModel
 
                         string path = Paths.PathToMaximaLogs;
 
-                        using (Loading loading = new Loading(()=>StartCalculationProcces(Paths.PathToBatchCalculateNewDecision)))
+                        string func;
+                        using (StreamReader sr = new StreamReader(Paths.PathToBatchCalculateNewDecision))
                         {
-                            loading.ShowDialog();
+                            func = sr.ReadLine();
                         }
+                        func = func.Replace("f(x):=", "");
+                        func = func.Replace(";", "");
+                        func = func.Replace("\n", "");
+                        func = func.Replace(" ", "");
 
-                        #region Get values and create object
-                        OriginalValue OriginalValue = new OriginalValue(CreateSymbolicExpretion(Paths.PathToNewDecisionFunctionValues));
-                        Coefficient_a0 Coefficient_a0 =new Coefficient_a0( CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_a0));
-                        Coefficient_an Coefficient_an = new Coefficient_an( CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_an));
-                        Coefficient_bn Coefficient_bn = new Coefficient_bn(CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_bn));
-                        PartialSum_k PartialSum_k = new PartialSum_k(CreateSymbolicExpretion(Paths.PathToNewDecisionFourierSeriesValues));
-                        FourierSeries FourierSeries = new FourierSeries(PartialSum_k.SymbolicValue.Replace("k", @"+\infty"), PartialSum_k.LaTeXValue.Replace("k", @"+\infty"));
+                        HelperContext helperContext = new HelperContext();
+                        Decision decision;
 
-
-                        DateTime СreationTime = DateTime.Now;
-
-                        string[] values;
-
-                        using (StreamReader sr = new StreamReader(Paths.PathToNewDecisionsegmentValues))
+                        if (helperContext.Decisions.Any(d => d.OriginalValue.SymbolicValue.Replace("\n","").Replace(" ", "").Equals(func)))
                         {
-                            values = sr.ReadToEnd().Split(';');
+                            decision = helperContext.Decisions.Include(d => d.FourierSeries)
+                                    .Include(d => d.OriginalValue)
+                                    .Include(d => d.Coefficient_a0)
+                                    .Include(d => d.Coefficient_an)
+                                    .Include(d => d.Coefficient_bn)
+                                    .Include(d => d.PartialSum_k)
+                                    .FirstOrDefault(d => d.OriginalValue.SymbolicValue.Equals(func));
+                            Decisions.Add(decision);
                         }
-
-                        string LowerSegmentValue = MaximaTeXParser(values[0]);
-                        string UpperSegmentValue = MaximaTeXParser(values[1]);
-                        string HalfPeriod = MaximaTeXParser(values[2]);
-
-                        string inputedValue;
-                        using (StreamReader sw = new StreamReader(Paths.PathToNewDecision + "inputedValue.txt"))
+                        else
                         {
-                            inputedValue = sw.ReadLine();
+                            using (Loading loading = new Loading(() => StartCalculationProcces(Paths.PathToBatchCalculateNewDecision)))
+                            {
+                                loading.ShowDialog();
+                            }
+
+                            #region Get values and create object
+                            OriginalValue OriginalValue = new OriginalValue(CreateSymbolicExpretion(Paths.PathToNewDecisionFunctionValues));
+                            Coefficient_a0 Coefficient_a0 = new Coefficient_a0(CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_a0));
+                            Coefficient_an Coefficient_an = new Coefficient_an(CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_an));
+                            Coefficient_bn Coefficient_bn = new Coefficient_bn(CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_bn));
+                            PartialSum_k PartialSum_k = new PartialSum_k(CreateSymbolicExpretion(Paths.PathToNewDecisionFourierSeriesValues));
+                            FourierSeries FourierSeries = new FourierSeries(PartialSum_k.SymbolicValue.Replace("k", @"+\infty"), PartialSum_k.LaTeXValue.Replace("k", @"+\infty"));
+
+
+                            DateTime СreationTime = DateTime.Now;
+
+                            string[] values;
+
+                            using (StreamReader sr = new StreamReader(Paths.PathToNewDecisionsegmentValues))
+                            {
+                                values = sr.ReadToEnd().Split(';');
+                            }
+
+                            string LowerSegmentValue = MaximaTeXParser(values[0]);
+                            string UpperSegmentValue = MaximaTeXParser(values[1]);
+                            string HalfPeriod = MaximaTeXParser(values[2]);
+
+                            string inputedValue;
+                            using (StreamReader sw = new StreamReader(Paths.PathToNewDecision + "inputedValue.txt"))
+                            {
+                                inputedValue = sw.ReadLine();
+                            }
+
+                            decision = new Decision(inputedValue, OriginalValue, LowerSegmentValue, UpperSegmentValue, HalfPeriod, Coefficient_a0, Coefficient_an, Coefficient_bn, FourierSeries, PartialSum_k, СreationTime);
+                            Decisions.Add(decision);
+                            helperContext.Decisions.Add(decision);
+                            //helperContext.Decisions.Add(new Decision(inputedValue, OriginalValue, LowerSegmentValue, UpperSegmentValue, HalfPeriod, Coefficient_a0, Coefficient_an, Coefficient_bn, FourierSeries, PartialSum_k, СreationTime));
+                            helperContext.SaveChanges();
+                            helperContext.Dispose();
+                            //SelectedDecesion = Decisions.LastOrDefault();
+                            //helperContext.OriginalValues.Add(OriginalValue);
+                            //helperContext.SaveChanges();
+                            //helperContext.Coefficient_a0s.Add(Coefficient_a0);
+                            //helperContext.SaveChanges();
+                            //helperContext.Coefficient_ans.Add(Coefficient_an);
+                            //helperContext.SaveChanges();
+                            //helperContext.Coefficient_bns.Add(Coefficient_bn);
+                            //helperContext.SaveChanges();
+                            //helperContext.FourierSeriess.Add(FourierSeries);
+                            //helperContext.SaveChanges();
+                            //helperContext.PartialSum_ks.Add(PartialSum_k);
+                            //helperContext.SaveChanges();
+
+
+                           
                         }
-
-                        Decision Decesion = new Decision(inputedValue,OriginalValue, LowerSegmentValue, UpperSegmentValue, HalfPeriod, Coefficient_a0, Coefficient_an, Coefficient_bn, FourierSeries, PartialSum_k, СreationTime);
-
-                        Decisions.Add(Decesion);
-                        #endregion
                         
+                        
+                        #endregion
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message+"\n"+ex.Source);
+                        MessageBox.Show("Уважаемый пользователь, при добавлении возникла ошибка, попробуйте повторить операцию.");
                     }
                 });
             }
-        }
-
-        void StartCalculationProcces(string path)
-        {
-            var startInfo = new System.Diagnostics.ProcessStartInfo
-            {
-                FileName = Paths.PathMaximaCMD,
-                Arguments = "-q -b " + '"' + path + '"',  // Путь к приложению
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-            Process pr = Process.Start(startInfo);
-
-            pr.WaitForExit();
         }
 
         public ICommand AddPlot
@@ -198,6 +235,22 @@ namespace Helper.ViewModel
                 });
             }
         }
+
+        void StartCalculationProcces(string path)
+        {
+            var startInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = Paths.PathMaximaCMD,
+                Arguments = "-q -b " + '"' + path + '"',  // Путь к приложению
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            Process pr = Process.Start(startInfo);
+
+            pr.WaitForExit();
+        }
+
+
         #region AddItem functions
         SymbolicExpretion CreateSymbolicExpretion(string FileName)
         {
@@ -226,6 +279,7 @@ namespace Helper.ViewModel
             resstr = resstr.Replace("$", "");
             resstr = resstr.Replace(@"\\,", " ");
             resstr = resstr.Replace(@"\\", @"\");
+            resstr = resstr.Replace("'sum", "sum");
 
             resstr = replaceOverToFrac(resstr);
 

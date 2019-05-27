@@ -92,7 +92,6 @@
     <Compile Include="Model\User.cs" />
     <Compile Include="ViewModel\AddDecisionViewModel.cs" />
     <Compile Include="ViewModel\BookEditorViewModel.cs" />
-    <Compile Include="ViewModel\ComfirmEmailViewModel.cs" />
     <Compile Include="ViewModel\DecisionViewModel.cs" />
     <Compile Include="ViewModel\EntranceViewModel.cs" />
     <Compile Include="ViewModel\LibraryViewModel.cs" />
@@ -237,6 +236,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

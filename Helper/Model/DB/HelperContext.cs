@@ -29,14 +29,10 @@
         public DbSet<Coefficient_an> Coefficient_ans { get; set; }
         public DbSet<Coefficient_bn> Coefficient_bns { get; set; }
         public DbSet<FourierSeries> FourierSeriess { get; set; }
-        public DbSet<PartialSum_k> PartialSum_k { get; set; }
+        public DbSet<PartialSum_k> PartialSum_ks { get; set; }
 
         
     }
 
-    //public class MyEntity
-    //{
-    //    public int Id { get; set; }
-    //    public string Name { get; set; }
-    //}
+    
 }

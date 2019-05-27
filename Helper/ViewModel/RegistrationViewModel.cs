@@ -3,6 +3,7 @@ using Helper.Model;
 using Helper.View;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -121,11 +122,15 @@ namespace Helper.ViewModel
                       else
                       {
                           User user = new User() { Name = this.Name, Login = this.Login, Password = this.firstPassword, Rool = "User" };
-                          AppUser.getInstance(user);
+                          AppUser.SetUser(user);
                           using (HelperContext helperContext = new HelperContext())
                           {
                               helperContext.Users.Add(user);
                               helperContext.SaveChanges();
+                              using (StreamWriter sw = new StreamWriter("Roll.txt", false))
+                              {
+                                  sw.WriteLine("User");
+                              }
                           }
                           DisposeThis();
                       }

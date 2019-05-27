@@ -81,10 +81,19 @@ namespace Helper.ViewModel
                                 window.Close();
                             }
                         }
-                    }
+                    }, ()=> !string.IsNullOrEmpty(originalValue) && !string.IsNullOrEmpty(LowerSegmentValue) && !string.IsNullOrEmpty(UpperSegmentValue) && SegmentValue(LowerSegmentValue, UpperSegmentValue)
                 );
             }
         }
+
+        bool SegmentValue(string lsv,string usv)
+        {
+            if (lsv == usv)
+                return false;
+            
+            return true;
+        }
+
         string CorrectPi(string input)
         {
             string output = input.Replace(@"\pi", @"%pi");

@@ -4,6 +4,7 @@ using Helper.View;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -47,8 +48,13 @@ namespace Helper.ViewModel
                         HelperContext helperContext = new HelperContext();
                         if (helperContext.Users.Any(u => u.Login.Replace("\n", "").Equals(Login) && u.Password.Replace("\n", "").Equals(password)))
                         {
-                            AppUser.getInstance(helperContext.Users.Include(u => u.Decisions).Include(u => u.FavoriteBooks).FirstOrDefault(u => u.Login.Replace("\n", "").Equals(Login) && u.Password.Replace("\n", "").Equals(password)));
-                            DisposeThis();
+                            User user = helperContext.Users.FirstOrDefault(u => u.Login.Replace("\n", "").Equals(Login) && u.Password.Replace("\n", "").Equals(password));
+                            AppUser.SetUser(user);
+                            using (StreamWriter sw = new StreamWriter("Roll.txt", false))
+                            {
+                                sw.WriteLine(user.Rool);
+                            }
+                                DisposeThis();
                         }
                         else
                         {

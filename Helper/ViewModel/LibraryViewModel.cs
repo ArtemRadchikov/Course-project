@@ -25,6 +25,8 @@ namespace Helper.ViewModel
         Book selectedBook;
         HelperContext HelperContext = new HelperContext();        
 
+        public string IsAdmin { get;set; }
+        
         public Book SelectedBook {
             get => selectedBook; 
             set
@@ -174,9 +176,12 @@ namespace Helper.ViewModel
                 }, (book) => book != null);
             }
         }
-        
+
         public LibraryViewModel()
         {
+            if(AppUser.GetRoll().Replace("\n","").ToLower() != "admin")
+                IsAdmin = null;
+
             Books = new ObservableCollection<Book>();
             using (HelperContext helperContext = new HelperContext())
             {

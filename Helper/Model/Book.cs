@@ -34,7 +34,6 @@ namespace Helper.Model
         [Required]
         public string Url { get; set; }
 
-        public List<User> Users { get; set; }
         public object Clone()
         {
             ObservableCollection<KeyWordItem> keyWords = new ObservableCollection<KeyWordItem>();
@@ -84,11 +83,11 @@ namespace Helper.Model
             if (book.PublishDate < 1950 || book.PublishDate > DateTime.Now.Year)
                 return false;
 
-            //Regex regex = new Regex(@"[\w,/,-,_,.,:,\s\d]+[.][p][d][f]");
-            //MatchCollection matches = regex.Matches(book.Url);
-            //if (matches.Count == 1)
-            //    if( matches[0].Value != book.Url)
-            //        return false;
+            Regex regex = new Regex(@"[\w,/,-,_,.,:,\s\d]+[.][p][d][f]");
+            MatchCollection matches = regex.Matches(book.Url);
+            if (matches.Count == 1)
+                if (matches[0].Value != book.Url)
+                    return false;
 
             return true;
         }

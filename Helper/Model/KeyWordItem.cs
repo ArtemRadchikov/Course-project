@@ -23,5 +23,13 @@ namespace Helper.Model
         public KeyWordItem() { }
 
         public ICollection<Book> Books { get; set; }
+
+        public Book Book
+        {
+            get => default(Book);
+            set
+            {
+            }
+        }
     }
 }

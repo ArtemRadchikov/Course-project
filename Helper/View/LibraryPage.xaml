@@ -87,34 +87,44 @@
             </Grid.RowDefinitions>
 
             <Grid Background="{StaticResource MediumBaseBrush}" Grid.Row="0" >
-
-                <StackPanel 
+                <ScrollViewer>
+                    <ScrollViewer.Style>
+                        <Style TargetType="ScrollViewer">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=IsAdmin}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ScrollViewer.Style>
+                    <StackPanel 
                 Margin="174,0,236,0"
                 HorizontalAlignment="Center"
                 Orientation="Horizontal">
 
-                    <Button Command="{Binding AddItem}" Style="{StaticResource BaseButton}" ToolTip="Добавить книгу">
-                        <ContentControl Height="50" Content="{DynamicResource PlusIcon}" />
-                    </Button>
+                        <Button Command="{Binding AddItem}" Style="{StaticResource BaseButton}" ToolTip="Добавить книгу">
+                            <ContentControl Height="50" Content="{DynamicResource PlusIcon}" />
+                        </Button>
 
-                    <Button
+                        <Button
                         Margin="-2,0,0,0"
                         Command="{Binding EditBook}"
                         CommandParameter="{Binding SelectedBook}"
                         Style="{DynamicResource BaseButton}"
                         ToolTip="Изменить книгу">
-                        <ContentControl Height="50" Content="{StaticResource PanIcon}" />
-                    </Button>
+                            <ContentControl Height="50" Content="{StaticResource PanIcon}" />
+                        </Button>
 
-                    <Button
+                        <Button
                         Margin="-2,0,0,0"
                         Command="{Binding DeleteBook}"
                         CommandParameter="{Binding SelectedBook}"
                         ToolTip="Удалить книгу"
                         Style="{StaticResource BaseButton}">
-                        <ContentControl Height="50" Content="{DynamicResource TrashIcon}" />
-                    </Button>
-                </StackPanel>
+                            <ContentControl Height="50" Content="{DynamicResource TrashIcon}" />
+                        </Button>
+                    </StackPanel>
+                </ScrollViewer>
             </Grid>
 
             <Grid

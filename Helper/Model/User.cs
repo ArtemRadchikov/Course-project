@@ -18,11 +18,8 @@ namespace Helper.Model
         [Required]
         public string Login { get; set; }
         [Required]
-        public string Rool { get; set; }
+        public string Rool { get; set; } = "";
         [Required]
         public string Password { get; set; }
-
-        public ObservableCollection<Book> FavoriteBooks { get; set; }
-        public ObservableCollection<Decision> Decisions { get; set; }
     }
 }

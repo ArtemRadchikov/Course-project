@@ -11,9 +11,9 @@ namespace Helper.Model
 {
     public class Decision:BaseVM
     {
+        #region felds
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int DecisionID { get; set; }
-        [Required]
         public string InputedValue { get; set; }
         public OriginalValue originalValue;
         public Coefficient_a0 coefficient_a0;
@@ -25,9 +25,7 @@ namespace Helper.Model
         public string upperSegmentValue;
         public string halfPeriod;
         public DateTime creationTime;
-
-        public ICollection<User> Users { get; set; }
-
+        #endregion
         [Required]
         public OriginalValue OriginalValue
         {
@@ -145,20 +143,25 @@ namespace Helper.Model
 
         public Decision()
         {
-            this.OriginalValue = new OriginalValue();
-            this.Coefficient_a0 = new Coefficient_a0();
-            this.Coefficient_an = new Coefficient_an();
-            this.Coefficient_bn = new Coefficient_bn();
-            this.FourierSeries = new FourierSeries();
-            this.PartialSum_k = new PartialSum_k();
-            this.СreationTime = DateTime.Now;
+            //this.OriginalValue = new OriginalValue();
+            //this.Coefficient_a0 = new Coefficient_a0();
+            //this.Coefficient_an = new Coefficient_an();
+            //this.Coefficient_bn = new Coefficient_bn();
+            //this.FourierSeries = new FourierSeries();
+            //this.PartialSum_k = new PartialSum_k();
+            //this.СreationTime = DateTime.Now;
         }
     }
 
     public class OriginalValue : SymbolicExpretion
     {
         [Key]
+        [ForeignKey("DecisionOf")]
         public int DecisionID { get; set; }
+
+        public Decision DecisionOf { get; set; }
+
+
         public OriginalValue(SymbolicExpretion symbolicExpretion) : base(symbolicExpretion.SymbolicValue.Replace(@"\pi", @"%pi"), symbolicExpretion.LaTeXValue) { }
         public OriginalValue() { }
     }
@@ -166,7 +169,11 @@ namespace Helper.Model
     public class Coefficient_a0 : SymbolicExpretion
     {
         [Key]
+        [ForeignKey("DecisionOf")]
         public int DecisionID { get; set; }
+
+        public Decision DecisionOf { get; set; }
+
         public Coefficient_a0() { }
         public Coefficient_a0(SymbolicExpretion symbolicExpretion) : base(symbolicExpretion.SymbolicValue.Replace(@"\pi", @"%pi"), symbolicExpretion.LaTeXValue) { }
     }
@@ -174,7 +181,12 @@ namespace Helper.Model
     public class Coefficient_an : SymbolicExpretion
     {
         [Key]
+        [ForeignKey("DecisionOf")]
         public int DecisionID { get; set; }
+
+        public Decision DecisionOf { get; set; }
+
+
         public Coefficient_an() { }
         public Coefficient_an(SymbolicExpretion symbolicExpretion) : base(symbolicExpretion.SymbolicValue.Replace(@"\pi", @"%pi"), symbolicExpretion.LaTeXValue) { }
     }
@@ -182,7 +194,12 @@ namespace Helper.Model
     public class Coefficient_bn : SymbolicExpretion
     {
         [Key]
+        [ForeignKey("DecisionOf")]
         public int DecisionID { get; set; }
+
+        public Decision DecisionOf { get; set; }
+
+
         public Coefficient_bn() { }
         public Coefficient_bn(SymbolicExpretion symbolicExpretion) : base(symbolicExpretion.SymbolicValue.Replace(@"\pi", @"%pi"), symbolicExpretion.LaTeXValue) { }
     }
@@ -190,15 +207,11 @@ namespace Helper.Model
     public class FourierSeries : SymbolicExpretion
     {
         [Key]
+        [ForeignKey("DecisionOf")]
         public int DecisionID { get; set; }
 
-        public Decision Decision
-        {
-            get => default(Decision);
-            set
-            {
-            }
-        }
+        public Decision DecisionOf { get; set; }
+
 
         public FourierSeries() { }
         public FourierSeries(string SymbolicValue, string LaTeXValue) : base(SymbolicValue.Replace(@"\pi", @"%pi"), LaTeXValue) { }
@@ -207,7 +220,12 @@ namespace Helper.Model
     public class PartialSum_k : SymbolicExpretion
     {
         [Key]
+        [ForeignKey("DecisionOf")]
         public int DecisionID { get; set; }
+
+        public Decision DecisionOf { get; set; }
+
+
         public PartialSum_k() { }
         public PartialSum_k(SymbolicExpretion symbolicExpretion) : base(symbolicExpretion.SymbolicValue.Replace(@"\pi", @"%pi"), symbolicExpretion.LaTeXValue) { }
     }

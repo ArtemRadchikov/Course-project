@@ -3,6 +3,7 @@ using Helper.Model;
 using Helper.View;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,11 @@ namespace Helper.ViewModel
             {
                 return new DelegateCommand(() =>
                 {
-                    AppUser.getInstance(new User() { UserID=-1,Name="Гость",Rool="Гость"});
+                    AppUser.SetUser(new User() { UserID=-1,Name="Гость",Rool="Гость"});
+                    using (StreamWriter sw = new StreamWriter("Roll.txt", false))
+                    {
+                        sw.WriteLine("Гость");
+                    }
                     DisposeThis();
                 });
             }

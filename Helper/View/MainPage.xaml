@@ -4,16 +4,49 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Helper.View"
+      xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="StartPage">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button Content="Library" Command="{Binding GoToLibrary}" Grid.Column="0"/>
-        <Button Content="Decisions" Command="{Binding GoToDecisions}" Grid.Column="1"/>
+        <Button Content="{DynamicResource LibraryIcon}" Style="{StaticResource BaseButton}" Command="{Binding GoToLibrary}"  Grid.Column="0" Grid.RowSpan="2"/>
+        <Button  Style="{StaticResource BaseButton}" Command="{Binding GoToDecisions}" Grid.Column="1" Grid.RowSpan="2">
+            <ContentControl   >
+                <Viewbox Stretch="Uniform">
+                    <Grid>
+                        <MD:PackIcon Kind="CalculatorVariant" Foreground="White"/>
+                    </Grid>
+                </Viewbox>
+            </ContentControl>
+        </Button>
+
+        <Ellipse HorizontalAlignment="Center"  Stroke="#FF8DEC3F" Margin="213,75" Width="374" Grid.ColumnSpan="2" Grid.RowSpan="2">
+            <Ellipse.Fill>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF006A65" Offset="0"/>
+                    <GradientStop Color="#FF4CC3BE" Offset="1"/>
+                </LinearGradientBrush>
+            </Ellipse.Fill>
+        </Ellipse>
+        <TextBlock TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center" Text="Помощник" FontSize="72" Width="374" FontFamily="Franklin Gothic Demi Cond" HorizontalAlignment="Center" RenderTransformOrigin="0.833,0.558" Grid.ColumnSpan="2" Grid.RowSpan="2">
+            <TextBlock.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                    <GradientStop Color="#FF19E6D3" Offset="1"/>
+                    <GradientStop Color="#FF06EC64"/>
+                </LinearGradientBrush>
+            </TextBlock.Foreground>
+        </TextBlock>
+
+
     </Grid>
+
 </Page>
