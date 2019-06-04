@@ -122,7 +122,6 @@ namespace Helper.ViewModel
                       else
                       {
                           User user = new User() { Name = this.Name, Login = this.Login, Password = this.firstPassword, Rool = "User" };
-                          AppUser.SetUser(user);
                           using (HelperContext helperContext = new HelperContext())
                           {
                               helperContext.Users.Add(user);
@@ -132,6 +131,8 @@ namespace Helper.ViewModel
                                   sw.WriteLine("User");
                               }
                           }
+                          AppUser.SetUser(user);
+
                           DisposeThis();
                       }
                   }

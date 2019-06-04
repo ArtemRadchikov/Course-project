@@ -38,7 +38,7 @@ namespace Helper.ViewModel
         public DecisionViewModel()
         {
             Decisions = new ObservableCollection<Decision>();
-            if (AppUser.GetRoll().Replace("\n","").ToLower()!="гость")
+            if (AppUser.GetRoll().ToLower()!="гость")
                 using (HelperContext helper = new HelperContext())
                 {
                     foreach (Decision d in helper.Decisions.Include(d=>d.Coefficient_a0)
@@ -74,6 +74,7 @@ namespace Helper.ViewModel
                 }, DecisionsView.SortDescriptions.Count != 0);
             }
         }
+
         public ICommand DeleteDecision
         {
             get
@@ -113,7 +114,7 @@ namespace Helper.ViewModel
                         HelperContext helperContext = new HelperContext();
                         Decision decision;
 
-                        if (helperContext.Decisions.Any(d => d.OriginalValue.SymbolicValue.Replace("\n","").Replace(" ", "").Equals(func)))
+                        if (helperContext.Decisions.Any(d => d.OriginalValue.SymbolicValue.Replace("\n", "").Replace(" ", "").Equals(func)))
                         {
                             decision = helperContext.Decisions.Include(d => d.FourierSeries)
                                     .Include(d => d.OriginalValue)
@@ -132,6 +133,7 @@ namespace Helper.ViewModel
                             }
 
                             #region Get values and create object
+
                             OriginalValue OriginalValue = new OriginalValue(CreateSymbolicExpretion(Paths.PathToNewDecisionFunctionValues));
                             Coefficient_a0 Coefficient_a0 = new Coefficient_a0(CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_a0));
                             Coefficient_an Coefficient_an = new Coefficient_an(CreateSymbolicExpretion(Paths.PathToNewDecisionСoefficientValues_an));
@@ -160,22 +162,30 @@ namespace Helper.ViewModel
                             }
 
                             decision = new Decision(inputedValue, OriginalValue, LowerSegmentValue, UpperSegmentValue, HalfPeriod, Coefficient_a0, Coefficient_an, Coefficient_bn, FourierSeries, PartialSum_k, СreationTime);
+                            #endregion
+
                             Decisions.Add(decision);
                             helperContext.Decisions.Add(decision);
-                            //helperContext.Decisions.Add(new Decision(inputedValue, OriginalValue, LowerSegmentValue, UpperSegmentValue, HalfPeriod, Coefficient_a0, Coefficient_an, Coefficient_bn, FourierSeries, PartialSum_k, СreationTime));
                             helperContext.SaveChanges();
                             helperContext.Dispose();
-                                                       
-                        }
+                            //SaveDecisionAsync(decision).Wait();
+                        }                     
                         
-                        
-                        #endregion
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show("Уважаемый пользователь, при добавлении возникла ошибка, попробуйте повторить операцию.");
                     }
                 });
+            }
+        }
+
+        private static async Task SaveDecisionAsync(Decision decision)
+        {
+            using (HelperContext helperContext = new HelperContext())
+            {
+                helperContext.Decisions.Add(decision);
+                await helperContext.SaveChangesAsync();
             }
         }
 
@@ -193,7 +203,6 @@ namespace Helper.ViewModel
                             Text = sr.ReadToEnd();
                         }
 
-                        
                         Text = Text.Replace("{E}", EForCalculation.ToString().Replace(",","."));
                         Text = Text.Replace("{x}", XForCalculation.ToString());
                         Text = Text.Replace("{fx}", SelectedDecesion.OriginalValue.SymbolicValue);
@@ -201,11 +210,6 @@ namespace Helper.ViewModel
                         Text = Text.Replace("{a}", SelectedDecesion.LowerSegmentValue.Replace(@"\", "%"));
                         Text = Text.Replace("{b}", SelectedDecesion.UpperSegmentValue.Replace(@"\", "%"));
                         Text = Text.Replace("{path}", Paths.PathToMaximaLogs);
-                        //    Text = Text.Replace("{fx}", SelectedDecesion.OriginalValue.SymbolicValue);
-                        //    Text = Text.Replace("{gx}", SelectedDecesion.PartialSum_k.SymbolicValue);
-                        //    Text = Text.Replace("{k}", k.ToString());
-                        //Text = Text.Replace("{a}", SelectedDecesion.LowerSegmentValue.Replace(@"\","%"));
-                        //    Text = Text.Replace("{b}", SelectedDecesion.UpperSegmentValue.Replace(@"\", "%"));
 
                         using (StreamWriter sw = new StreamWriter(Paths.PathToMaximaLogs + "/CalculateK.txt", false))
                         {
@@ -219,17 +223,25 @@ namespace Helper.ViewModel
                         string k;
                         using (StreamReader sr = new StreamReader(Paths.PathToMaximaLogs + "K.txt"))
                             k = sr.ReadToEnd();
-                            MessageBox.Show(" Для достижения точности E= "+EForCalculation.ToString()+"\n Достаточно суммы "+ k.Replace("\"","").Replace(";","") +" порядка");
-                        //Paths.PathToBatchCalculateNewDecesion
 
-
+                        MessageBox.Show(" Для достижения точности E= "+EForCalculation.ToString()+"\n Достаточно суммы "+ k.Replace("\"","").Replace(";","") +" порядка");
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message);
                     }
-                });
+                }, ()=> ChekE(EForCalculation));
             }
+        }
+
+        private bool ChekE(double E)
+        {
+            if (E == 0)
+                return false;
+            if (E > 1)
+                return false;
+            
+            return true;
         }
 
         public double xForCalculation;

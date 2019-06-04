@@ -49,12 +49,13 @@ namespace Helper.ViewModel
                         if (helperContext.Users.Any(u => u.Login.Replace("\n", "").Equals(Login) && u.Password.Replace("\n", "").Equals(password)))
                         {
                             User user = helperContext.Users.FirstOrDefault(u => u.Login.Replace("\n", "").Equals(Login) && u.Password.Replace("\n", "").Equals(password));
-                            AppUser.SetUser(user);
                             using (StreamWriter sw = new StreamWriter("Roll.txt", false))
                             {
                                 sw.WriteLine(user.Rool);
                             }
-                                DisposeThis();
+                            AppUser.SetUser(user);
+
+                            DisposeThis();
                         }
                         else
                         {

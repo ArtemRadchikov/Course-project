@@ -20,11 +20,12 @@ namespace Helper.ViewModel
             {
                 return new DelegateCommand(() =>
                 {
-                    AppUser.SetUser(new User() { UserID=-1,Name="Гость",Rool="Гость"});
                     using (StreamWriter sw = new StreamWriter("Roll.txt", false))
                     {
                         sw.WriteLine("Гость");
                     }
+                    AppUser.SetUser(new User() { UserID = -1, Name = "Гость", Rool = "Гость" });
+
                     DisposeThis();
                 });
             }
